@@ -1,0 +1,20 @@
+<div class=" flex flex-col gap-6">
+    <mat-card class="hover:cursor-pointer" *ngFor="let project of projects" (click)="openProject.emit(project)">
+      <mat-card-title>{{project.title}} </mat-card-title>
+      <mat-card-subtitle>{{project.subtitle}}</mat-card-subtitle>
+     
+      <mat-card-content>
+        <p>{{project.description}}</p>
+        <mat-progress-bar
+        color="accent"
+        [value]="project.getCompletionProgress()">
+    </mat-progress-bar>
+      </mat-card-content>
+      <mat-card-actions>
+          <button color="accent" mat-button>MANAGE</button>
+            {{getParticipants(project.users)}}
+        
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  

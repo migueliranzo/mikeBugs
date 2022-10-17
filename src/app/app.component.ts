@@ -8,8 +8,9 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'mikeBugs';
   links = [
-    {name: "Dashboard", url: '/', icon: "dashboard" },
-    {name: "Project status", url: '/project', icon: "folder" },
+    {name: "Dashboard", url: '/dashboard', icon: "dashboard" },
+    {name: "Project status", url: '/project-status', icon: "folder" },
+    {name: "Manage projects", url: '/project-management', icon: "edit_document"},
   ]
 
 }
