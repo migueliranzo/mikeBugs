@@ -1,5 +1,5 @@
 <div class=" flex flex-col gap-6">
-    <mat-card class="hover:cursor-pointer" *ngFor="let project of projects" (click)="openProject.emit(project)">
+    <mat-card class="hover:cursor-pointer" *ngFor="let project of projects$ | async" (click)="openProject.emit(project)">
       <mat-card-title>{{project.title}} </mat-card-title>
       <mat-card-subtitle>{{project.subtitle}}</mat-card-subtitle>
      

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Project } from 'src/app/common/models/project';
 
 @Component({
@@ -8,7 +9,7 @@ import { Project } from 'src/app/common/models/project';
 })
 export class ProjectCardComponent implements OnInit {
 
-  @Input() projects?: Project[];
+  @Input() projects$?:  Observable<Project[]>;
   @Output() openProject: EventEmitter<any> = new EventEmitter();
 
   constructor() { }

@@ -1,4 +1,6 @@
 <div class="flex flex-row p-8 gap-8">
-    <app-project-card [projects]="projects" class="basis-[33%] overflow-hidden" (openProject)="openProject($event)" ></app-project-card>
-    <app-project-detail class="basis-[66%] overflow-hidden" [selectedProject]="selectedProject"></app-project-detail>
+    <app-project-card [projects$]="projects$" class="basis-[33%]" (openProject)="openProject($event)" ></app-project-card>
+    <app-project-detail class="basis-[66%] " [selectedProject]="selectedProject"></app-project-detail>
 </div>
+
+
