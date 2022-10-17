@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'mikeBugs';
+  links = [
+    {name: "Dashboard", url: '/', icon: "dashboard" },
+    {name: "Project status", url: '/project', icon: "folder" },
+  ]
+
 }
