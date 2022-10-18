@@ -7,17 +7,39 @@ import { Project } from 'src/app/common/models/project';
   styleUrls: ['./project-detail.component.scss']
 })
 export class ProjectDetailComponent implements OnInit {
-
-  project: Project = new Project('','','','',[],[]);
+  displayedColumns: string[] = [];
+  roles: any[] = [{value: 0 , viewValue:"Developer"},{value: 1, viewValue: "Project Manager"}, {value:2, viewValue:"Admin"}];
+  viewMode: boolean = true;
+  currentProject: { id: string; title: string; subtitle: string; description: string; tickets: any; users: any; } | undefined;
 
   @Input() set selectedProject(project:Project){
     if(!project) return;
-    this.project = new Project(project.id,project.title,project.subtitle,project.description,project.tickets,project.users);
+    this.viewMode = true;
+    this.displayedColumns = ['name', 'role'];
+    this.currentProject = JSON.parse(JSON.stringify(project))
   }
 
   constructor() { }
 
   ngOnInit(): void {
+    
+  }
+
+  editMode(){
+    this.viewMode = false;
+    this.displayedColumns.push("remove");
+  }
+
+  addMemeber(){
+
+  }
+
+  removeMember(){
+
+  }
+
+  saveChanges(){
+    
   }
 
 }

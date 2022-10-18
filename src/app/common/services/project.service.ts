@@ -18,7 +18,7 @@ export class ProjectService {
         { name: 'API error control', completed: true },
         { name: 'Users can be created without name', completed: false },
       ],
-      [{ name: 'Test' }]
+      [{ name: 'Test',role:0 }]
     ),
     new Project(
       '1',
@@ -30,7 +30,7 @@ export class ProjectService {
         { name: 'API error control', completed: false },
         { name: 'Users can be created without name', completed: false },
       ],
-      [{ name: 'Test' }, { name: 'mike' }]
+      [{ name: 'Test',role:1 }, { name: 'mike',role:0 }]
     ),
     new Project(
       '2',
@@ -42,7 +42,7 @@ export class ProjectService {
         { name: 'API error control', completed: true },
         { name: 'Users can be created without name', completed: false },
       ],
-      [{ name: 'Test' }, { name: 'mike' }, { name: 'Gustav' }]
+      [{ name: 'Test',role:0 }, { name: 'mike' ,role:2}, { name: 'Gustav',role:0 }]
     ),
     new Project(
       '3',
@@ -54,7 +54,7 @@ export class ProjectService {
         { name: 'API error control', completed: true },
         { name: 'Users can be created without name', completed: true },
       ],
-      [{ name: 'Test' }, { name: 'mike' }, { name: 'Gustav' }, { name: 'mike' }, { name: 'Gustav' }]
+      [{ name: 'Test',role:1 }, { name: 'mike',role:0 }, { name: 'Gustav',role:2 }, { name: 'mike' ,role:0}, { name: 'Gustav',role:0 }]
     ),
   ];
   constructor() {}

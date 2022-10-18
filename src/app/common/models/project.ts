@@ -4,10 +4,10 @@ export class Project {
     public title:string;
     public subtitle: string;
     public description:string;
-    public tickets: any[];
-    public users:any[];
+    public tickets: any;
+    public users:any;
 
-    constructor(id:string, title:string, subtitle:string, desription:string, tickets:{}[], users:{}[]){
+    constructor(id:string, title:string, subtitle:string, desription:string, tickets:any[], users:any[]){
         this.id = id;
         this.title = title;
         this.subtitle = subtitle;

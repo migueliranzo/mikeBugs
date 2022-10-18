@@ -16,6 +16,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatGridListModule} from '@angular/material/grid-list';
 import { ProjectDetailComponent } from './components/project-managment/project-detail/project-detail.component';
 import { ProjectCardComponent } from './components/project-managment/project-card/project-card.component';
+import {MatTableModule} from '@angular/material/table';
+import {MatSelectModule} from '@angular/material/select';
 
 
 @NgModule({
@@ -31,6 +33,8 @@ import { ProjectCardComponent } from './components/project-managment/project-car
     MatSliderModule,
     MatCardModule,
     MatSidenavModule,
+    MatSelectModule,
+    MatTableModule,
     MatGridListModule,
     AppRoutingModule,
     MatIconModule,

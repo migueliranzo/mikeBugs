@@ -29,3 +29,15 @@ app-root {
 mat-sidenav {
     width: 200px;
 }
+
+app-project-detail .mat-select-disabled .mat-select-value{
+    color: black;
+}
+
+app-project-detail .mat-select-disabled .mat-select-arrow-wrapper{
+    display: none;
+}
+
+app-project-detail .mat-form-field-appearance-legacy.mat-form-field-disabled .mat-form-field-underline{
+    background-image: none;
+}
