@@ -1,0 +1,166 @@
+<div class="m-4 border">
+  <div class="bg-slate-700 px-2 text-white"><h2>Filters</h2></div>
+  <div class="flex flex-col">
+    <div  class="p-2 bg-slate-200 flex gap-4 flex-wrap justify-between">
+
+        <mat-form-field appearance="outline">
+            <mat-label>Title</mat-label>
+            <mat-select>
+                <mat-option *ngFor="let sample of samples" [value]="sample.value">
+                  {{sample.viewValue}}
+                </mat-option>
+              </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Reported by</mat-label>
+            <mat-select>
+                <mat-option *ngFor="let sample of samples" [value]="sample.value">
+                  {{sample.viewValue}}
+                </mat-option>
+              </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Assigned to</mat-label>
+            <mat-select>
+                <mat-option *ngFor="let sample of samples" [value]="sample.value">
+                  {{sample.viewValue}}
+                </mat-option>
+              </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select>
+                <mat-option *ngFor="let sample of samples" [value]="sample.value">
+                  {{sample.viewValue}}
+                </mat-option>
+              </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Last updated</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input matStartDate placeholder="Start date">
+              <input matEndDate placeholder="End date">
+            </mat-date-range-input>
+            <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
+
+       
+     
+
+          
+
+
+    </div>
+    <div class="p-2 bg-slate-100 flex gap-4 flex-wrap justify-between">
+        <mat-form-field appearance="outline">
+            <mat-label>Priority</mat-label>
+            <mat-select>
+                <mat-option *ngFor="let sample of samples" [value]="sample.value">
+                  {{sample.viewValue}}
+                </mat-option>
+              </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Category</mat-label>
+            <mat-select>
+                <mat-option *ngFor="let sample of samples" [value]="sample.value">
+                  {{sample.viewValue}}
+                </mat-option>
+              </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label >Project</mat-label>
+            <mat-select>
+                <mat-option *ngFor="let sample of samples" [value]="sample.value">
+                  {{sample.viewValue}}
+                </mat-option>
+              </mat-select>
+          </mat-form-field>
+
+
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Severity</mat-label>
+            <mat-select>
+                <mat-option *ngFor="let sample of samples" [value]="sample.value">
+                  {{sample.viewValue}}
+                </mat-option>
+              </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Created</mat-label>
+            <mat-date-range-input [rangePicker]="createdPicker">
+              <input matStartDate placeholder="Start date">
+              <input matEndDate placeholder="End date">
+            </mat-date-range-input>
+            <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matSuffix [for]="createdPicker"></mat-datepicker-toggle>
+            <mat-date-range-picker #createdPicker></mat-date-range-picker>
+          </mat-form-field>
+       
+       
+    </div>
+  </div>
+  <div class="px-2 pt-1 bg-gray-200">
+    <mat-form-field class="mx-2"><mat-label>Search</mat-label><input matInput></mat-form-field>
+    <button mat-button color="accent">Apply filters</button>
+  </div>
+</div>
+
+<div>
+
+    <table mat-table [dataSource]="tickets" class="w-[100%]">
+
+        <ng-container matColumnDef="priority">
+          <th mat-header-cell *matHeaderCellDef> Priority </th>
+          <td mat-cell *matCellDef="let element"> {{priority[element.priority]}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef> Id </th>
+            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="severity">
+            <th mat-header-cell *matHeaderCellDef> Severity </th>
+            <td mat-cell *matCellDef="let element"> 
+              <mat-icon [ngClass]="{
+                'text-green-600':element.severity === 0,
+                'text-yellow-500':element.severity === 1,
+                'text-red-500':element.severity === 2,
+                'text-red-700':element.severity === 3
+              }"> {{severity[element.severity]}} </mat-icon>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="category">
+            <th mat-header-cell *matHeaderCellDef> Category </th>
+            <td mat-cell *matCellDef="let element"> {{element.category}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef> Status </th>
+            <td mat-cell *matCellDef="let element"> {{status[element.status]}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="lastUpdateChange">
+            <th mat-header-cell *matHeaderCellDef> Last Updated </th>
+            <td mat-cell *matCellDef="let element"> {{element.lastUpdateChange}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef> Title </th>
+            <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+          </ng-container>
+      
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    
+</div>

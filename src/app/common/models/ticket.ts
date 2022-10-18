@@ -1,16 +1,16 @@
 export interface Ticket {
 
-    id: string;
+    id: number;
     title:string;
     description:string;
     reporter:string;
-    assigned: any[];
-    status:string;
-    severity: string;
-    priority: string;
+    assigned: string;
+    status:number;
+    severity: number;
+    priority: number;
     category:string;
-    project:string;
-    creationDate: Date;
-    lastUpdateChange: Date;
+    project:number;
+    creationDate: string;
+    lastUpdateChange: string;
 
 }

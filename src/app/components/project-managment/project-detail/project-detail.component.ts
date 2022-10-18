@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Project } from 'src/app/common/models/project';
 
 @Component({
@@ -19,7 +20,7 @@ export class ProjectDetailComponent implements OnInit {
     this.currentProject = JSON.parse(JSON.stringify(project))
   }
 
-  constructor() { }
+  constructor(private router:Router) { }
 
   ngOnInit(): void {
     
@@ -39,7 +40,11 @@ export class ProjectDetailComponent implements OnInit {
   }
 
   saveChanges(){
-    
+
+  }
+
+  goToProjectView(){
+    this.router.navigate(["/ticket-list", { filter: this.currentProject?.id }])
   }
 
 }

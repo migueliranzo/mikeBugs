@@ -18,6 +18,12 @@ import { ProjectDetailComponent } from './components/project-managment/project-d
 import { ProjectCardComponent } from './components/project-managment/project-card/project-card.component';
 import {MatTableModule} from '@angular/material/table';
 import {MatSelectModule} from '@angular/material/select';
+import { ticketListComponent } from './components/ticket-list/ticket-list.component';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatDatepickerModule } from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
 
 
 @NgModule({
@@ -25,13 +31,20 @@ import {MatSelectModule} from '@angular/material/select';
     AppComponent,
     ProjectManagmentComponent,
     ProjectDetailComponent,
-    ProjectCardComponent
+    ProjectCardComponent,
+    ticketListComponent
   ],
   imports: [
     BrowserModule,
     AccordionModule,
     MatSliderModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatInputModule,
     MatCardModule,
+    MatFormFieldModule,
     MatSidenavModule,
     MatSelectModule,
     MatTableModule,
