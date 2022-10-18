@@ -24,7 +24,8 @@ import {MatInputModule} from '@angular/material/input';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatDatepickerModule } from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
-
+import {MatSortModule} from '@angular/material/sort';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,9 @@ import {MatNativeDateModule} from '@angular/material/core';
     MatNativeDateModule,
     MatDatepickerModule,
     FormsModule,
+    MatPaginatorModule,
     ReactiveFormsModule,
+    MatSortModule,
     MatInputModule,
     MatCardModule,
     MatFormFieldModule,

@@ -41,3 +41,7 @@ app-project-detail .mat-select-disabled .mat-select-arrow-wrapper{
 app-project-detail .mat-form-field-appearance-legacy.mat-form-field-disabled .mat-form-field-underline{
     background-image: none;
 }
+
+app-ticket-list .mat-paginator-page-size{
+    display: none;
+}
