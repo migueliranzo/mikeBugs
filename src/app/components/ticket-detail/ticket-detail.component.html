@@ -1,0 +1,63 @@
+<div class="flex flex-col">
+
+
+<div class="flex m-6 gap-4">
+
+    <div class="flex-1 border rounded flex-grow-[2]  ">
+        <div class="bg-[#ff4081] px-2 py-1 text-white text-lg">
+        {{ticket.project}} {{ticket.category}} details
+        </div>
+        <div class="bg-white p-2  flex justify-between">
+
+        <div class="text-xl"> 
+            <p class="flex items-center"> {{ticket.category}} {{ticket.id}}  </p>
+            <p > {{ticket.title}}</p>
+        </div>
+
+        <div>
+            <p>{{ticket.assigned}}</p>
+        </div>
+
+        </div>
+
+        
+        <div class="p-2 flex gap-4">
+            <div class="flex-1 flex-grow-[2]  ">
+                <p class="border-b font-medium text-base" >Description</p>
+                <textarea class="w-[100%] h-[75%] border rounded p-2 bg-[#fafafa] min-h-[5rem]"> {{ticket.description}} </textarea>
+            </div>
+            <div class="flex-1">
+                <p class="border-b font-medium text-base">
+                    Info
+                </p>
+                <p>    Status {{ticket.status}}</p>
+                <p>    Severity {{ticket.severity}}</p>
+                <p>    Category {{ticket.category}}</p>
+                <p>    Priority {{ticket.priority}}</p> 
+                <p>    Reporter {{ticket.reporter}}</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="flex-1 border rounded ">
+        <div class="bg-[#ff4081] px-2 py-1 text-white text-lg">
+           <span class="flex items-center gap-2 m-0">Ticket history<mat-icon>schedule</mat-icon> </span>
+
+        </div>
+        The history I guess lil
+    </div>
+
+</div>
+
+<div class="border m-6 rounded">
+    <div class="bg-[#ff4081] px-2 py-1 text-white text-lg">
+        <span class="flex items-center gap-2 m-0">Ticket comments<mat-icon>chat</mat-icon> </span>
+    </div>
+    <div class="flex flex-col">
+       Comment
+    </div>
+   
+</div>
+
+</div>

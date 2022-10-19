@@ -1,11 +1,13 @@
 import { Component, OnInit, ViewChild,AfterViewInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort,Sort } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ParamMap, ActivatedRoute} from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Ticket } from 'src/app/common/models/ticket';
 import { TicketService } from 'src/app/common/services/ticket.service';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-ticket-list',
   templateUrl: './ticket-list.component.html',
@@ -38,7 +40,7 @@ export class ticketListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private route: ActivatedRoute, private ticketService: TicketService) { }
+  constructor(private route: ActivatedRoute, private router: Router, private ticketService: TicketService) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params: ParamMap) => {
@@ -72,6 +74,12 @@ export class ticketListComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   
+  }
+
+  goDetailTicket(ticket:Ticket){
+    console.log(ticket);
+    
+    this.router.navigate(["/ticket-detail", { filter: JSON.stringify(ticket) }])
   }
 
 }

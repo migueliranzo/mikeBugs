@@ -26,6 +26,7 @@ import {MatDatepickerModule } from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     ProjectManagmentComponent,
     ProjectDetailComponent,
     ProjectCardComponent,
-    ticketListComponent
+    ticketListComponent,
+    TicketDetailComponent
   ],
   imports: [
     BrowserModule,
