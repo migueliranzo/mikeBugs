@@ -7,6 +7,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Ticket } from 'src/app/common/models/ticket';
 import { TicketService } from 'src/app/common/services/ticket.service';
 import { Router } from '@angular/router';
+import { VariablesService } from 'src/app/common/services/variables.service';
 
 @Component({
   selector: 'app-ticket-list',
@@ -31,16 +32,16 @@ export class ticketListComponent implements OnInit {
   {label:"Status", content: this.samples},{label:"Priority", content: this.samples},{label:"Category", content: this.samples},{label:"Project", content: this.samples},
   {label:"Severity", content: this.samples}];
 
-  priority: any = { 0:"Low", 1:"Medium", 2:"High", 3: "Critical"};
-  status: any = { 0:"Proposed", 1:"Active", 2:"Closed"};
-  severity: any = {0:"expand_more", 1:"minimize", 2:" expand_less", 3: "error"};
+  priority: any;
+  status: any;
+  severity: any;
   displayedColumns: string[] = ["id", "priority" , "title" , "project", "severity","status", "category", "lastUpdateChange"];
 
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private route: ActivatedRoute, private router: Router, private ticketService: TicketService) { }
+  constructor(private route: ActivatedRoute, private router: Router, private ticketService: TicketService, private variablesService: VariablesService) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params: ParamMap) => {
@@ -50,7 +51,17 @@ export class ticketListComponent implements OnInit {
       this.selectedProject = params.get('filter');
     });
 
+    this.getAllVariables();
     this.getAllTickets();
+
+    console.log(this.severity);
+    
+  }
+
+  getAllVariables() {
+    this.priority = this.variablesService.priority;
+    this.status = this.variablesService.status;
+    this.severity = this.variablesService.severity;
   }
 
   ngAfterViewInit() {

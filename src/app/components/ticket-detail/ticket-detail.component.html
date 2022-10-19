@@ -7,14 +7,15 @@
         <div class="bg-[#ff4081] px-2 py-1 text-white text-lg">
         {{ticket.project}} {{ticket.category}} details
         </div>
-        <div class="bg-white p-2  flex justify-between">
+        <div class="bg-[#f7f7f7] p-2  flex justify-between">
 
         <div class="text-xl"> 
             <p class="flex items-center"> {{ticket.category}} {{ticket.id}}  </p>
             <p > {{ticket.title}}</p>
         </div>
 
-        <div>
+        <div class="flex flex-col items-center gap-1">
+           <img src="{{svg}}" alt="profilePIC" height="50" width="50" class="rounded-full border bg-[#fafafa]">
             <p>{{ticket.assigned}}</p>
         </div>
 
@@ -27,14 +28,27 @@
                 <textarea class="w-[100%] h-[75%] border rounded p-2 bg-[#fafafa] min-h-[5rem]"> {{ticket.description}} </textarea>
             </div>
             <div class="flex-1">
-                <p class="border-b font-medium text-base">
+                <p class="border-b font-medium text-base ">
                     Info
                 </p>
-                <p>    Status {{ticket.status}}</p>
-                <p>    Severity {{ticket.severity}}</p>
-                <p>    Category {{ticket.category}}</p>
-                <p>    Priority {{ticket.priority}}</p> 
-                <p>    Reporter {{ticket.reporter}}</p>
+                <p>
+                    <span class="font-medium"> Status:</span>  
+                    <span  [ngClass]="{
+                    'text-blue-400': ticket.status === 0,
+                    'text-yellow-400': ticket.status === 1,
+                    'text-green-500': ticket.status === 2 }"> {{status[ticket.status]}}</span> 
+                </p>
+
+                <p>  <span class="font-medium"> Priority:</span>  {{priority[ticket.priority]}}</p> 
+                <p class="flex items-center gap-2">     <span class="font-medium"> Severity:</span> <mat-icon [ngClass]="{
+                    'text-green-600': ticket.severity === 0,
+                    'text-yellow-500': ticket.severity === 1,
+                    'text-red-500': ticket.severity === 2,
+                    'text-red-700': ticket.severity === 3
+                    }" > {{severity[ticket.severity]}}
+                </mat-icon>  </p>
+                <p>  <span class="font-medium"> Category:</span> {{ticket.category}}</p>
+                <p>    <span class="font-medium"> Reporter:</span> {{ticket.reporter}}</p>
             </div>
         </div>
 
@@ -42,7 +56,7 @@
 
     <div class="flex-1 border rounded ">
         <div class="bg-[#ff4081] px-2 py-1 text-white text-lg">
-           <span class="flex items-center gap-2 m-0">Ticket history<mat-icon>schedule</mat-icon> </span>
+           <span class="flex items-center gap-2">Ticket history<mat-icon>schedule</mat-icon> </span>
 
         </div>
         The history I guess lil
