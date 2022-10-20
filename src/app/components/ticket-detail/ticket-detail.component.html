@@ -15,7 +15,7 @@
         </div>
 
         <div class="flex flex-col items-center gap-1">
-           <img src="{{svg}}" alt="profilePIC" height="50" width="50" class="rounded-full border bg-[#fafafa]">
+           <img src="{{svg}}" alt="profilePIC" height="50" width="50" class="rounded-full border bg-[#fafafa7d]">
             <p>{{ticket.assigned}}</p>
         </div>
 
@@ -31,24 +31,28 @@
                 <p class="border-b font-medium text-base ">
                     Info
                 </p>
-                <p>
-                    <span class="font-medium"> Status:</span>  
+
+                <p class="flex justify-between">
+                    <span class="font-medium"> Status</span>  
                     <span  [ngClass]="{
                     'text-blue-400': ticket.status === 0,
                     'text-yellow-400': ticket.status === 1,
                     'text-green-500': ticket.status === 2 }"> {{status[ticket.status]}}</span> 
                 </p>
 
-                <p>  <span class="font-medium"> Priority:</span>  {{priority[ticket.priority]}}</p> 
-                <p class="flex items-center gap-2">     <span class="font-medium"> Severity:</span> <mat-icon [ngClass]="{
+                <p class="flex justify-between ">  <span class="font-medium"> Priority</span>  {{priority[ticket.priority]}}</p> 
+
+                <p class="flex items-center gap-2 justify-between">     <span class="font-medium"> Severity</span> <mat-icon [ngClass]="{
                     'text-green-600': ticket.severity === 0,
                     'text-yellow-500': ticket.severity === 1,
                     'text-red-500': ticket.severity === 2,
                     'text-red-700': ticket.severity === 3
                     }" > {{severity[ticket.severity]}}
                 </mat-icon>  </p>
-                <p>  <span class="font-medium"> Category:</span> {{ticket.category}}</p>
-                <p>    <span class="font-medium"> Reporter:</span> {{ticket.reporter}}</p>
+
+                <p class="flex justify-between">  <span class="font-medium"> Category</span> {{ticket.category}}</p>
+
+                <p class="flex justify-between">    <span class="font-medium"> Reporter</span> {{ticket.reporter}}</p>
             </div>
         </div>
 

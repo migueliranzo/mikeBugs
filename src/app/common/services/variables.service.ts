@@ -6,9 +6,10 @@ import { Injectable } from '@angular/core';
 export class VariablesService {
 
   priority: any = { 0:"Low", 1:"Medium", 2:"High", 3: "Critical"};
-  status: any = { 0:"Proposed", 1:"Active", 2:"Closed"};
+  status: any = { 0:"Proposed", 1:"Active", 2:"Closed", 3:"Created"};
   severity: any = {0:"expand_more", 1:"remove", 2:" expand_less", 3: "error"};
   displayedColumns: string[] = ["id", "priority" , "title" , "project", "severity","status", "category", "lastUpdateChange"];
+  categories: any = {0:"Bugs", 1:"Task", 2:"Review",3: "Request"}
 
   constructor() { }
 }

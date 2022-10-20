@@ -9,7 +9,7 @@ export class AppComponent {
   title = 'mikeBugs';
   links = [
     {name: "Dashboard", url: '/dashboard', icon: "dashboard" },
-    {name: "Project status", url: '/project-status', icon: "folder" },
+    {name: "Ticket list", url: '/ticket-list', icon: "format_list_bulleted" },
     {name: "Manage projects", url: '/project-management', icon: "edit_document"},
   ]
 
