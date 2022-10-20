@@ -9,7 +9,7 @@ import { Project } from 'src/app/common/models/project';
 })
 export class ProjectCardComponent implements OnInit {
 
-  @Input() projects$?:  Observable<Project[]>;
+  @Input() projects:  any;
   @Output() openProject: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
@@ -18,6 +18,7 @@ export class ProjectCardComponent implements OnInit {
   }
 
   getParticipants(devs: any) {
+    if(devs == undefined) return;
     return {
       0: `No one is currently working on this project`,
       1: `${devs[0]?.name} is working on this`,
@@ -26,5 +27,11 @@ export class ProjectCardComponent implements OnInit {
       4: `${devs[0]?.name}, ${devs[1]?.name} and ${devs.length - 2 } others are working on this`,
     }[Math.min(4, devs.length)]; 
   }
+
+  getCompletionProgress(tickets:[]):number{
+    if(tickets == undefined) return 0;
+    return (tickets.filter((x:any)=> x.completed).length / tickets.length) * 100
+  }
+
 
 }

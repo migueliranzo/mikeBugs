@@ -17,7 +17,7 @@ export class ProjectDetailComponent implements OnInit {
     if(!project) return;
     this.viewMode = true;
     this.displayedColumns = ['name', 'role'];
-    this.currentProject = JSON.parse(JSON.stringify(project))
+    this.currentProject = project;
   }
 
   constructor(private router:Router) { }

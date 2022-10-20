@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>Create new project</h1>
+<form class="example-form" [formGroup]="editedProject">
+<div mat-dialog-content class="flex-col min-w-[25rem]" style="display: flex;">
+    
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Project name</mat-label>
+          <input matInput formControlName="title">
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Project Subtitle</mat-label>
+            <input matInput formControlName="subtitle">
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Project description</mat-label>
+            <textarea class="min-h-[7rem]" matInput formControlName="description" ></textarea>
+        </mat-form-field>
+   
+</div>
+</form>
+<div mat-dialog-actions class="float-right">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="accent" (click)="saveProject()" mat-dialog-close>Save</button>
+</div>

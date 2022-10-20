@@ -12,7 +12,9 @@
                </div>
             </mat-card-content>
             <mat-card-actions>
+              <div class="flex justify-end"> 
               <button mat-button color="accent" (click)="goToProjectView()">Manage tickets</button>
+              </div>
             </mat-card-actions>
           </mat-card>
     </div>
@@ -57,10 +59,8 @@
             
 
             <mat-card-actions>
-              <button mat-button color="accent" (click)="editMode()">Manage users</button>
-              <div *ngIf="!viewMode" class="inline">
-                <button  class="float-right"  mat-button color="accent" (click)="saveChanges()">Save changes</button>
-                <button  class="float-right" mat-button color="accent" (click)="addMemeber()">Add new people</button> 
+              <div class="flex justify-end"> 
+                <button  mat-button color="accent" (click)="addMemeber()">Invite new people</button> 
               </div>
             </mat-card-actions >
           </mat-card>

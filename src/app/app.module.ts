@@ -33,6 +33,9 @@ import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import {MatDialogModule} from '@angular/material/dialog';
+import { ProjectDialogComponent } from './components/project-managment/project-dialog/project-dialog.component';
+
 
 @NgModule({
   declarations: [
@@ -41,7 +44,8 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
     ProjectDetailComponent,
     ProjectCardComponent,
     ticketListComponent,
-    TicketDetailComponent
+    TicketDetailComponent,
+    ProjectDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -53,6 +57,7 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
     MatDatepickerModule,
     FormsModule,
     MatPaginatorModule,
+    MatDialogModule,
     ReactiveFormsModule,
     MatSortModule,
     MatInputModule,
