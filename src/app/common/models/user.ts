@@ -1,6 +1,9 @@
+import { FieldValue } from "@angular/fire/firestore";
+
 export interface User {
 
-    id:number;
+    id:string;
     username:string;
     email:string;
+    createdAt?: FieldValue
 }

@@ -27,6 +27,12 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
+import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { environment } from '../environments/environment';
+import { provideAuth,getAuth } from '@angular/fire/auth';
+import { provideFirestore,getFirestore } from '@angular/fire/firestore';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 
 @NgModule({
   declarations: [
@@ -41,6 +47,8 @@ import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.
     BrowserModule,
     AccordionModule,
     MatSliderModule,
+    AngularFirestoreModule,
+    AngularFireModule.initializeApp(environment.firebase),
     MatNativeDateModule,
     MatDatepickerModule,
     FormsModule,
@@ -59,7 +67,10 @@ import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.
     MatButtonModule,
     MatProgressBarModule,
     MatToolbarModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore())
   ],
   providers: [],
   bootstrap: [AppComponent]

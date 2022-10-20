@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "mike-bugs": {
+      "hosting": {
+        "mikeBugs": [
+          "mike-bugs"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "mike-bugs"
+  }
+}
