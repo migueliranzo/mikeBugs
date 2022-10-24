@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ParamMap, ActivatedRoute} from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { first, map, Observable, Subscription, tap } from 'rxjs';
 import { Ticket } from 'src/app/common/models/ticket';
 import { TicketService } from 'src/app/common/services/ticket.service';
 import { Router } from '@angular/router';
@@ -20,9 +20,8 @@ import { environment } from 'src/environments/environment';
 export class ticketListComponent implements OnInit {
 
   selectedProject: any;
-  tickets$?: Observable<Ticket[]>;
-  tickets: Ticket[] = [];
-  dataSource!: MatTableDataSource<Ticket>;
+  tickets$?: Observable<any[]>;
+  dataSource!: MatTableDataSource<any>;
   priority: any;
   status: any;
   severity: any;
@@ -53,15 +52,8 @@ export class ticketListComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private router: Router, private ticketService: TicketService, formBuilder: FormBuilder, public matDialog: MatDialog) {
 
-    this.getAllTickets();
-    this.dataSource.filterPredicate = ((data, filter:any) => {
-      const a = filter.status == null || data.status === filter.status ;
-      const b = !filter.name || data.name.toLowerCase().includes(filter.name.toLowerCase());
-      const c = filter.severity == null || data.severity === filter.severity;
-      const d = filter.project == null || data.project === filter.project;
-      const e = filter.priority == null || data.priority === filter.priority;
-      return a && b && c && d && e;
-    }) as (arg0: any, arg1: string) => boolean;
+  
+    
 
     this.formControl = formBuilder.group({
       status: null,
@@ -87,8 +79,9 @@ export class ticketListComponent implements OnInit {
       
     });
 
+  
+    this.setUpDataTable();
     this.getAllVariables();
-
   }
 
   /*
@@ -104,25 +97,31 @@ export class ticketListComponent implements OnInit {
       updatedEnd: null,
   */
 
+  setUpDataTable(){
+    this.ticketService.getAllTickets().valueChanges().pipe(tap(x=> {
+
+      this.dataSource = new MatTableDataSource(x)
+      console.log(x);
+      
+      this.dataSource.filterPredicate = ((data, filter:any) => {
+        const a = filter.status == null || data.status === filter.status ;
+        const b = !filter.name || data.name.toLowerCase().includes(filter.name.toLowerCase());
+        const c = filter.severity == null || data.severity === filter.severity;
+        const d = filter.project == null || data.project === filter.project;
+        const e = filter.priority == null || data.priority === filter.priority;
+        return a && b && c && d && e;
+      }) as (arg0: any, arg1: string) => boolean;
+
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+
+    })).subscribe();
+  }
+
   getAllVariables() {
     this.priority = environment.priority;
     this.status = environment.status;
     this.severity = environment.severity;
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
-
-  getAllTickets() {
-    this.ticketService.getAllTickets().subscribe(x=> {
-      this.tickets = x;
-      this.dataSource = new MatTableDataSource(x);
-      console.log(x);
-      
-    });
-  
   }
   
   applySearchFilter(event: Event) {
