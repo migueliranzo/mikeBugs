@@ -7,8 +7,10 @@ import { Observable, Subscription } from 'rxjs';
 import { Ticket } from 'src/app/common/models/ticket';
 import { TicketService } from 'src/app/common/services/ticket.service';
 import { Router } from '@angular/router';
-import { VariablesService } from 'src/app/common/services/variables.service';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { TicketDialogComponent } from './ticket-dialog/ticket-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-ticket-list',
@@ -17,7 +19,7 @@ import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 })
 export class ticketListComponent implements OnInit {
 
-  selectedProject: string | null | undefined;
+  selectedProject: any;
   tickets$?: Observable<Ticket[]>;
   tickets: Ticket[] = [];
   dataSource!: MatTableDataSource<Ticket>;
@@ -39,22 +41,22 @@ export class ticketListComponent implements OnInit {
   ];
 
 
-  dropDownfilterStructure:any = [{label:"Title", content: this.samples},{label:"Reported by", content: this.samples},{label:"Assigned to", content: this.samples},
+  dropDownfilterStructure:any = [{label:"Name", content: this.samples},{label:"Reported by", content: this.samples},{label:"Assigned to", content: this.samples},
   {label:"Status", content: this.samples},{label:"Priority", content: this.samples},{label:"Category", content: this.samples},{label:"Project", content: this.samples},
   {label:"Severity", content: this.samples}];
 
-  displayedColumns: string[] = ["id", "priority" , "title" , "project", "severity","status", "category", "lastUpdateChange"];
+  displayedColumns: string[] = ["id", "priority" , "name" , "project", "severity","status", "category", "lastUpdateChange"];
 
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private route: ActivatedRoute, private router: Router, private ticketService: TicketService, private variablesService: VariablesService, formBuilder: FormBuilder) {
+  constructor(private route: ActivatedRoute, private router: Router, private ticketService: TicketService, formBuilder: FormBuilder, public matDialog: MatDialog) {
 
     this.getAllTickets();
     this.dataSource.filterPredicate = ((data, filter:any) => {
       const a = filter.status == null || data.status === filter.status ;
-      const b = !filter.title || data.title.toLowerCase().includes(filter.title.toLowerCase());
+      const b = !filter.name || data.name.toLowerCase().includes(filter.name.toLowerCase());
       const c = filter.severity == null || data.severity === filter.severity;
       const d = filter.project == null || data.project === filter.project;
       const e = filter.priority == null || data.priority === filter.priority;
@@ -64,7 +66,7 @@ export class ticketListComponent implements OnInit {
     this.formControl = formBuilder.group({
       status: null,
       severity: null,
-      title: null,
+      name: null,
       project: null,
       priority: null,
     })
@@ -82,6 +84,7 @@ export class ticketListComponent implements OnInit {
         return;
       }
       this.selectedProject = params.get('filter');
+      
     });
 
     this.getAllVariables();
@@ -102,9 +105,9 @@ export class ticketListComponent implements OnInit {
   */
 
   getAllVariables() {
-    this.priority = this.variablesService.priority;
-    this.status = this.variablesService.status;
-    this.severity = this.variablesService.severity;
+    this.priority = environment.priority;
+    this.status = environment.status;
+    this.severity = environment.severity;
   }
 
   ngAfterViewInit() {
@@ -141,6 +144,10 @@ export class ticketListComponent implements OnInit {
     console.log(ticket);
     
     this.router.navigate(["/ticket-detail", { filter: JSON.stringify(ticket) }])
+  }
+
+  openDialog(){
+    let dialogInstance = this.matDialog.open(TicketDialogComponent); 
   }
 
 }

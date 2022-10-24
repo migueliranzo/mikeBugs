@@ -1,0 +1,80 @@
+<h1 mat-dialog-title>Create new Ticket</h1>
+<form class="example-form" [formGroup]="editedTicket">
+  <div mat-dialog-content class="row min-w-[25rem]">
+    <div class="column">
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Ticket name</mat-label>
+        <input matInput formControlName="title" />
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Ticket priority</mat-label>
+        <mat-select>
+            <mat-option *ngFor="let priority of priorities" [value]="priority.value">
+                {{priority.viewValue}}
+            </mat-option>
+          </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="column">
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Ticket severity</mat-label>
+        <mat-select>
+            <mat-option *ngFor="let severity of severities" [value]="severity.value">
+              {{severity.value}}
+            </mat-option>
+          </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Ticket category</mat-label>
+        <mat-select>
+            <mat-option *ngFor="let category of categories" [value]="category.value">
+              {{category.viewValue}}
+            </mat-option>
+          </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="column">
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Ticket status</mat-label>
+        <mat-select>
+            <mat-option *ngFor="let status of statuses" [value]="status.value">
+              {{status.viewValue}}
+            </mat-option>
+          </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Assigned to</mat-label>
+        <mat-select>
+            <mat-option *ngFor="let food of users" >
+            </mat-option>
+          </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="column">
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Ticket description</mat-label>
+        <textarea
+          class="min-h-[7rem]"
+          matInput
+          formControlName="description"
+        ></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+</form>
+<div mat-dialog-actions class="float-right">
+  <button mat-button mat-dialog-close>Close</button>
+  <button
+    mat-raised-button
+    color="accent"
+    (click)="saveTicket()"
+    mat-dialog-close
+  >
+    Save
+  </button>
+</div>

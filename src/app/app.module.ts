@@ -35,6 +35,7 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import {MatDialogModule} from '@angular/material/dialog';
 import { ProjectDialogComponent } from './components/project-managment/project-dialog/project-dialog.component';
+import { TicketDialogComponent } from './components/ticket-list/ticket-dialog/ticket-dialog.component';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { ProjectDialogComponent } from './components/project-managment/project-d
     ProjectCardComponent,
     ticketListComponent,
     TicketDetailComponent,
-    ProjectDialogComponent
+    ProjectDialogComponent,
+    TicketDialogComponent
   ],
   imports: [
     BrowserModule,

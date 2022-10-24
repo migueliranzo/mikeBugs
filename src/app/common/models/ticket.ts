@@ -1,7 +1,7 @@
 export interface Ticket {
 
     id: number;
-    title:string;
+    name:string;
     description:string;
     reporter:string;
     assigned: string;

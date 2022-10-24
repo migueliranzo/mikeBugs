@@ -14,7 +14,7 @@ import { ProjectDialogComponent } from './project-dialog/project-dialog.componen
   styleUrls: ['./project-managment.component.scss'],
 })
 export class ProjectManagmentComponent implements OnInit {
-  projects$!: any;
+  projects$: any;
   selectedProject: any;
 
   constructor(private projectService:ProjectService, private store: AngularFirestore, public matDialog: MatDialog) {}

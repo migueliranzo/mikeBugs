@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Params } from '@angular/router';
 import { Ticket } from 'src/app/common/models/ticket';
-import { VariablesService } from 'src/app/common/services/variables.service';
 import { createAvatar } from '@dicebear/avatars';
 import * as style from '@dicebear/miniavs';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -21,7 +21,7 @@ export class TicketDetailComponent implements OnInit {
 
   svg:any;
 
-  constructor(private route: ActivatedRoute, private variablesService: VariablesService) {}
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.ticket = JSON.parse(this.route.snapshot.paramMap.get('filter')!);
@@ -41,9 +41,9 @@ export class TicketDetailComponent implements OnInit {
   }
 
   getAllVariables() {
-    this.priority = this.variablesService.priority;
-    this.status = this.variablesService.status;
-    this.severity = this.variablesService.severity;
+    this.priority = environment.priority;
+    this.status = environment.status;
+    this.severity = environment.severity;
   }
 
 
