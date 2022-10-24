@@ -4,12 +4,12 @@
     <div class="column">
       <mat-form-field class="example-full-width" appearance="outline">
         <mat-label>Ticket name</mat-label>
-        <input matInput formControlName="title" />
+        <input matInput formControlName="name" />
       </mat-form-field>
 
       <mat-form-field class="example-full-width" appearance="outline">
         <mat-label>Ticket priority</mat-label>
-        <mat-select>
+        <mat-select formControlName="priority">
             <mat-option *ngFor="let priority of priorities" [value]="priority.value">
                 {{priority.viewValue}}
             </mat-option>
@@ -19,7 +19,7 @@
     <div class="column">
       <mat-form-field class="example-full-width" appearance="outline">
         <mat-label>Ticket severity</mat-label>
-        <mat-select>
+        <mat-select formControlName="severity">
             <mat-option *ngFor="let severity of severities" [value]="severity.value">
               {{severity.value}}
             </mat-option>
@@ -28,7 +28,7 @@
 
       <mat-form-field class="example-full-width" appearance="outline">
         <mat-label>Ticket category</mat-label>
-        <mat-select>
+        <mat-select formControlName="category">
             <mat-option *ngFor="let category of categories" [value]="category.value">
               {{category.viewValue}}
             </mat-option>
@@ -39,8 +39,8 @@
     <div class="column">
       <mat-form-field class="example-full-width" appearance="outline">
         <mat-label>Ticket status</mat-label>
-        <mat-select>
-            <mat-option *ngFor="let status of statuses" [value]="status.value">
+        <mat-select  formControlName="status" >
+            <mat-option  *ngFor="let status of statuses" [value]="status.value">
               {{status.viewValue}}
             </mat-option>
           </mat-select>
@@ -48,7 +48,7 @@
 
       <mat-form-field class="example-full-width" appearance="outline">
         <mat-label>Assigned to</mat-label>
-        <mat-select>
+        <mat-select formControlName="assigned">
             <mat-option *ngFor="let food of users" >
             </mat-option>
           </mat-select>

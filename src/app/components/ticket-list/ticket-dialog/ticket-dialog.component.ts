@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { serverTimestamp } from '@angular/fire/firestore';
 import { FormControl, FormGroup } from '@angular/forms';
 import { User } from 'src/app/common/models/user';
 import { TicketService } from 'src/app/common/services/ticket.service';
@@ -18,8 +19,16 @@ export class TicketDialogComponent implements OnInit {
   users: User[] = [];
 
   editedTicket = new FormGroup({
-    title: new FormControl(''),
-    subtitle: new FormControl(''),
+    name: new FormControl(''),
+    priority: new FormControl(),
+    severity: new FormControl(),
+    category: new FormControl(),
+    status: new FormControl(),
+    assigned: new FormControl('onhold'),
+    project: new FormControl(0),
+    reported: new FormControl('onhold'),
+    creationDate: new FormControl(serverTimestamp()),
+    lastUpdateChange: new FormControl(serverTimestamp()),
     description: new FormControl(''),
   });
 
@@ -31,7 +40,9 @@ export class TicketDialogComponent implements OnInit {
   }
 
   saveTicket(){
+    console.log(this.editedTicket.value);
     this.ticketService.saveTicket(this.editedTicket.value);
+    
   }
 
 

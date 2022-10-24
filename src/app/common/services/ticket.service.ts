@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { from } from 'rxjs';
+import { Firestore } from '@angular/fire/firestore';
+import { first, from } from 'rxjs';
 import { of } from 'rxjs/internal/observable/of';
 import { Ticket } from '../models/ticket';
 
@@ -109,13 +110,17 @@ export class TicketService {
   {"id":98,"name":"Subluxation of left acromioclavicular joint, init encntr","description":"Subluxation of left acromioclavicular joint, initial encounter","reporter":"ttommasetti2p","assigned":"ldeclerc2p","status":2,"severity":1,"priority":1,"category":"France","project":1,"creationDate":"3/6/2022","lastUpdateChange":"4/9/2022"},
   {"id":99,"name":"Coital incontinence","description":"Coital incontinence","reporter":"jrabbatts2q","assigned":"ibrooksby2q","status":0,"severity":0,"priority":2,"category":"Italy","project":1,"creationDate":"4/20/2022","lastUpdateChange":"10/21/2021"},
   {"id":100,"name":"Maternal care for abnlt of vulva and perineum, first tri","description":"Maternal care for abnormality of vulva and perineum, first trimester","reporter":"eizac2r","assigned":"emenichini2r","status":0,"severity":0,"priority":3,"category":"Indonesia","project":0,"creationDate":"3/13/2022","lastUpdateChange":"4/15/2022"}]
-  constructor() { }
+
+  constructor(private store: AngularFirestore) { }
 
   getAllTickets(){
     return of(this.tickets);
   }
 
   saveTicket(ticket: any){
+  
+    this.store.collection("tickets",ref => ref.where("project", "==", 0)).get().subscribe(x=> this.store.collection("tickets").add({...ticket, id: x.size}));
+  
   }
 
 }
