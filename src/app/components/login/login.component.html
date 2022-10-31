@@ -1,0 +1,11 @@
+<div>
+    <label for=""  >Email</label>
+    <input type="text" [(ngModel)]="email">
+    <label for="" >Password</label>
+    <input [(ngModel)]="password"  type="text">
+    <button (click)="submit()">Submit</button>
+</div>
+
+<div *ngIf="authService.currentUser$ | async as user">
+    {{user.email }}
+</div>

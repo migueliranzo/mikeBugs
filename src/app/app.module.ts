@@ -36,7 +36,8 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import {MatDialogModule} from '@angular/material/dialog';
 import { ProjectDialogComponent } from './components/project-managment/project-dialog/project-dialog.component';
 import { TicketDialogComponent } from './components/ticket-list/ticket-dialog/ticket-dialog.component';
-
+import { LoginComponent } from './components/login/login.component';
+import { AuthService } from './common/services/auth.service';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { TicketDialogComponent } from './components/ticket-list/ticket-dialog/ti
     ticketListComponent,
     TicketDetailComponent,
     ProjectDialogComponent,
-    TicketDialogComponent
+    TicketDialogComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -79,7 +81,7 @@ import { TicketDialogComponent } from './components/ticket-list/ticket-dialog/ti
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore())
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
