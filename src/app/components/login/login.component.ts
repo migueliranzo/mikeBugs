@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '@angular/fire/auth';
-import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/common/services/auth.service';
-
+import {FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import {ErrorStateMatcher} from '@angular/material/core';
 
 @Component({
   selector: 'app-login',
@@ -12,15 +11,18 @@ import { AuthService } from 'src/app/common/services/auth.service';
 export class LoginComponent implements OnInit {
   constructor(public authService: AuthService) {}
 
-  email!:string;
-  password!:string;
+  
+  emailFormControl = new FormControl('', [Validators.required, Validators.email]);
+  passwordFormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
+
+  matcher = new ErrorStateMatcher();
 
   ngOnInit(): void {
-   
+  
   }
  
   submit(){
-   this.authService.login(this.email,this.password);
+   this.authService.login(this.emailFormControl.value as string,this.passwordFormControl.value as string).subscribe(x=> console.log(x));
   }
 
 }
