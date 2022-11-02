@@ -38,6 +38,8 @@ import { ProjectDialogComponent } from './components/project-managment/project-d
 import { TicketDialogComponent } from './components/ticket-list/ticket-dialog/ticket-dialog.component';
 import { LoginComponent } from './components/login/login.component';
 import { AuthService } from './common/services/auth.service';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+
 
 @NgModule({
   declarations: [
@@ -56,6 +58,7 @@ import { AuthService } from './common/services/auth.service';
     AccordionModule,
     MatSliderModule,
     AngularFirestoreModule,
+    MatSnackBarModule,
     AngularFireModule.initializeApp(environment.firebase),
     MatNativeDateModule,
     MatDatepickerModule,

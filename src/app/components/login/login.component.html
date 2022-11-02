@@ -1,7 +1,10 @@
 <div class="flex justify-center items-center h-[60%]">
     <div class=" shadow-lg rounded bg-white p-4 min-w-[40%]">
-        <form class="login-form flex flex-col">
-            <p class="text-xl">Login</p>
+        <form class="flex flex-col" *ngIf="!isResetingPassword">
+            <p class="text-xl">{{ isSigning ? "Create new account"  : "Log in" }}</p>
+            <mat-error class="mb-3" *ngIf="invalidCredentials">
+                {{ isSigning ? "Email already taken"  : "Incorrect username or password" }}
+            </mat-error>
             <mat-form-field class="example-full-width" appearance="outline">
                 <mat-label>Email</mat-label>
                 <input type="email" matInput [formControl]="emailFormControl" [errorStateMatcher]="matcher">
@@ -23,13 +26,43 @@
                     Password is <strong>required</strong>
                 </mat-error>
             </mat-form-field>
+
+            <mat-form-field *ngIf="isSigning" class="example-full-width" appearance="outline">
+                <mat-label>Repeat password</mat-label>
+                <input matInput [formControl]="repeatPasswordFormControl" [errorStateMatcher]="matcher" type="password">
+                <mat-error *ngIf="repeatPasswordFormControl.hasError('required')">
+                    Repeat the password
+                </mat-error>
+                <mat-error *ngIf="repeatPasswordFormControl.hasError('forbiddenName')">
+                    Passwords must match
+                </mat-error>
+            </mat-form-field>
             
-        <button mat-raised-button color="accent" (click)="submit()" [disabled]="!(passwordFormControl.valid && emailFormControl.valid)" >Login</button>
+        <button mat-raised-button color="accent" (click)="submit()" [disabled]="valid()" >{{ isSigning ? "Create account" : "Log in" }}</button>
         <div class="flex mt-3 justify-around" >
-            <a  class="cursor-pointer text-blue-400 ">Sign up</a>
-            <a  class="cursor-pointer text-blue-400 ">Forgot password</a>
+            <a  class="cursor-pointer text-blue-400 " (click)="isSigning = !isSigning; invalidCredentials = false">{{ isSigning ? "Log in" : "Create account" }}</a>
+            <a  class="cursor-pointer text-blue-400 " (click)=" isResetingPassword = true; emailFormControl.reset()" >Forgot password</a>
         </div>
     </form>
+
+    <form class="flex flex-col" *ngIf="isResetingPassword">
+        <p class="text-xl">Enter your user account's email address and we will send you a password reset link</p>
+        <mat-error class="mb-3" *ngIf="invalidCredentials">
+            That address is either invalid or is not associated with an account
+        </mat-error>
+        <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Email</mat-label>
+            <input type="email" matInput [formControl]="emailFormControl" [errorStateMatcher]="matcher">
+            <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+                Please enter a valid email address
+            </mat-error>
+        </mat-form-field>
+        <button mat-raised-button color="accent" (click)="resetPassword()" [disabled]="!emailFormControl.valid" >Send password reset email</button>
+        <div class="flex mt-3 justify-around" >
+            <a  class="cursor-pointer text-blue-400 " (click)="isResetingPassword = false; emailFormControl.reset(); invalidCredentials = false">Back to Log in</a>
+        </div>
+    </form>
+
 </div>
 </div>
 <div *ngIf="authService.currentUser$ | async as user">

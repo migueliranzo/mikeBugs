@@ -20,16 +20,30 @@ export class AuthService {
   constructor(public auth: Auth) { }
 
   login(email:string, password:string) {
-   return from(signInWithEmailAndPassword(this.auth, email, password));
+  return from(signInWithEmailAndPassword(this.auth, email, password).then((userCredential) => {
+      const user = userCredential.user;
+      return false;
+    })
+    .catch((error) => {
+      const errorMessage = error.message;
+      return true;
+    }));
   }
 
-  singin(email: string, password:string){
-    from(createUserWithEmailAndPassword(this.auth,email,password)).subscribe(x=> console.log(x.user.uid)
-    )
+  createAccount(email: string, password:string){
+    return from(createUserWithEmailAndPassword(this.auth,email,password).then((userCredential)=>{
+      return false;
+    }).catch((error)=>{
+      return true;
+    }));
   }
 
   resetMail(email:string){
-    from(sendPasswordResetEmail(this.auth,email))
+    return from(sendPasswordResetEmail(this.auth,email).then((mail)=>{
+      return false;
+    }).catch((error)=>{
+      return true;
+    }));
   }
 
   logout() {
