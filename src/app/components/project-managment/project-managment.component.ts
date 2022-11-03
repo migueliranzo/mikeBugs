@@ -7,6 +7,7 @@ import { User } from 'src/app/common/models/user';
 import { serverTimestamp } from '@angular/fire/firestore';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjectDialogComponent } from './project-dialog/project-dialog.component';
+import { AuthService } from 'src/app/common/services/auth.service';
 
 @Component({
   selector: 'app-project-managment',
@@ -14,25 +15,27 @@ import { ProjectDialogComponent } from './project-dialog/project-dialog.componen
   styleUrls: ['./project-managment.component.scss'],
 })
 export class ProjectManagmentComponent implements OnInit {
-  projects$: any;
+  projects$!: Observable<unknown[]>;
   selectedProject: any;
+  currentUserId: any ;
 
-  constructor(private projectService:ProjectService, private store: AngularFirestore, public matDialog: MatDialog) {}
+  constructor(private projectService:ProjectService, private store: AngularFirestore, public matDialog: MatDialog, public authService: AuthService) {}
 
   ngOnInit(): void {
 
- 
-    this.store.collection("user").valueChanges().subscribe(x => console.log(x));
     this.projects$ = this.projectService.getAllProjects().valueChanges(); 
+    this.authService.currentUser$.subscribe(x=> this.currentUserId = x?.uid);
+    
   }
 
-  openProject(project:Project){
+  selectProject(project:Project){
     this.selectedProject = project;
   }
 
 
   openDialog(){
     let dialogInstance = this.matDialog.open(ProjectDialogComponent); 
+    dialogInstance.componentInstance.currentUserId = this.currentUserId;
     dialogInstance.componentInstance.modifiedProject.subscribe(x=> this.selectedProject = x);
   }
 
