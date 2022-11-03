@@ -24,7 +24,7 @@ export class ProjectManagmentComponent implements OnInit {
   ngOnInit(): void {
 
     this.authService.currentUser$.pipe(first()).subscribe(x=> {
-    this.currentUserId = x?.uid;
+    this.currentUserId = x;
     this.projects$ = this.projectService.getUserProjects(x!.uid);
     });
   }
@@ -33,10 +33,13 @@ export class ProjectManagmentComponent implements OnInit {
     this.selectedProject = project;
   }
 
+  sendEmail(email:any){
+   this.projectService.sendInvitation(email);
+  }
 
   openDialog(){
     let dialogInstance = this.matDialog.open(ProjectDialogComponent); 
-    dialogInstance.componentInstance.currentUserId = this.currentUserId;
+    dialogInstance.componentInstance.currentUser = this.currentUserId;
     dialogInstance.componentInstance.modifiedProject.subscribe(x=> this.selectedProject = x);
   }
 

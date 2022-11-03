@@ -11,23 +11,21 @@ import { ProjectService } from 'src/app/common/services/project.service';
 export class ProjectDialogComponent implements OnInit {
 
   @Output() modifiedProject:EventEmitter<any> = new EventEmitter();
-  @Input() currentUserId:any;
+  @Input() currentUser:any;
 
   editedProject = new FormGroup({
     title: new FormControl(''),
     subtitle: new FormControl(''),
-    description: new FormControl(''),
-    ownerId : new FormControl()
+    description: new FormControl('')
   });
 
   constructor(private projectService:ProjectService) { }
 
   ngOnInit(): void {
-    this.editedProject.controls["ownerId"].setValue(this.currentUserId);
   }
   
   saveProject(){
-    let newID = this.projectService.saveProject(this.editedProject.value, this.currentUserId);
+    let newID = this.projectService.saveProject(this.editedProject.value, this.currentUser);
     this.modifiedProject.emit({...this.editedProject.value, id: newID})
   }
 
