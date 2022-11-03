@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { first, map, Observable } from 'rxjs';
 import { Project } from 'src/app/common/models/project';
 import { ProjectService } from 'src/app/common/services/project.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
@@ -23,9 +23,10 @@ export class ProjectManagmentComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.projects$ = this.projectService.getAllProjects().valueChanges(); 
-    this.authService.currentUser$.subscribe(x=> this.currentUserId = x?.uid);
-    
+    this.authService.currentUser$.pipe(first()).subscribe(x=> {
+    this.currentUserId = x?.uid;
+    this.projects$ = this.projectService.getUserProjects(x!.uid);
+    });
   }
 
   selectProject(project:Project){

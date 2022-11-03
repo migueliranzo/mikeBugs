@@ -27,7 +27,7 @@ export class ProjectDialogComponent implements OnInit {
   }
   
   saveProject(){
-    let newID = this.projectService.saveProject(this.editedProject.value);
+    let newID = this.projectService.saveProject(this.editedProject.value, this.currentUserId);
     this.modifiedProject.emit({...this.editedProject.value, id: newID})
   }
 
