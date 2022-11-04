@@ -17,14 +17,14 @@ import { AuthService } from 'src/app/common/services/auth.service';
 export class ProjectManagmentComponent implements OnInit {
   projects$!: Observable<unknown[]>;
   selectedProject: any;
-  currentUserId: any ;
+  currentUser: any ;
 
   constructor(private projectService:ProjectService, private store: AngularFirestore, public matDialog: MatDialog, public authService: AuthService) {}
 
   ngOnInit(): void {
 
     this.authService.currentUser$.pipe(first()).subscribe(x=> {
-    this.currentUserId = x;
+    this.currentUser = x;
     this.projects$ = this.projectService.getUserProjects(x!.uid);
     });
   }
@@ -34,13 +34,15 @@ export class ProjectManagmentComponent implements OnInit {
   }
 
   sendEmail(email:any){
-   this.projectService.sendInvitation(email);
+  this.projectService.sendInvitation(email);
   }
 
   openDialog(){
     let dialogInstance = this.matDialog.open(ProjectDialogComponent); 
-    dialogInstance.componentInstance.currentUser = this.currentUserId;
-    dialogInstance.componentInstance.modifiedProject.subscribe(x=> this.selectedProject = x);
+    dialogInstance.componentInstance.modifiedProject.subscribe(x=> {
+    this.projectService.saveProject(x, this.currentUser).subscribe(x=> 
+        this.projects$ = this.projectService.getUserProjects(this.currentUser.uid));
+    });
   }
 
 }

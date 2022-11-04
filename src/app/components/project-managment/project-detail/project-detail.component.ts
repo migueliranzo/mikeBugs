@@ -5,7 +5,7 @@ import { Project } from 'src/app/common/models/project';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-project-detail',
   templateUrl: './project-detail.component.html',
@@ -13,7 +13,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 })
 export class ProjectDetailComponent implements OnInit {
   displayedColumns: string[] = [];
-  roles: any[] = [{value: 0 , viewValue:"Developer"},{value: 1, viewValue: "Project Manager"}, {value:2, viewValue:"Admin"}];
+  roles?: any[];
   viewMode: boolean = true;
   currentProject: { id: string; title: string; subtitle: string; description: string; tickets: any; users: any; } | undefined;
 
@@ -23,6 +23,7 @@ export class ProjectDetailComponent implements OnInit {
     this.viewMode = true;
     this.displayedColumns = ['name', 'role'];
     this.currentProject = {...project, users: [...project.users]};
+    
   }
 
   @Output() sendEmail:EventEmitter<any> = new EventEmitter();
@@ -34,6 +35,7 @@ export class ProjectDetailComponent implements OnInit {
   constructor(private router:Router, public matDialog: MatDialog) { }
 
   ngOnInit(): void {
+    this.roles = environment.roles;
   }
 
   editMode(){
@@ -46,6 +48,7 @@ export class ProjectDetailComponent implements OnInit {
   }
 
   addMemeber(ref: TemplateRef<any>){
+    this.emailFormControl.reset();
     this.matDialog.open(ref);
   }
 

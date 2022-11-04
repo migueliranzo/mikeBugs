@@ -2,8 +2,6 @@
 
     
         <mat-card class="example-card">
-            <mat-card-title></mat-card-title>
-            <mat-card-subtitle></mat-card-subtitle>
             <mat-card-content>
               <h2>{{currentProject.title}}</h2>
               <p>{{currentProject.description}}</p>
@@ -21,8 +19,6 @@
 
     
         <mat-card class="example-card">
-            <mat-card-title></mat-card-title>
-            <mat-card-subtitle></mat-card-subtitle>
             <mat-card-content>
               <table mat-table [dataSource]="currentProject.users" class="w-[100%]">
 
@@ -34,7 +30,7 @@
                 <ng-container matColumnDef="role">
                   <th mat-header-cell *matHeaderCellDef> Rol </th>
                   <td mat-cell *matCellDef="let element">
-                    <mat-form-field  >  
+                    <mat-form-field  >
                       <mat-select [disabled]="viewMode" [(value)]="element.role" >
                         <mat-option *ngFor="let roles of roles" [value]="roles.value">
                           {{roles.viewValue}}
@@ -60,7 +56,7 @@
 
             <mat-card-actions>
               <div > 
-                <button  mat-button color="accent" (click)="editMode()">Edit</button> 
+                <button  mat-button color="accent" (click)="editMode()">Manage users</button> 
                 <button  mat-button color="accent" (click)="addMemeber(memberDialog)">Invite new people</button> 
               </div>
             </mat-card-actions >

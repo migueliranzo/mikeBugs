@@ -9,12 +9,17 @@
         color="accent"
         [value]="getCompletionProgress(project?.tickets)">
     </mat-progress-bar>
+    <div class="mt-4">
+      {{getParticipants(project.users)}}
+    </div>
       </mat-card-content>
       
       <mat-card-actions>
           <button color="accent" mat-button>EDIT</button>
-            {{getParticipants(project.users)}}
+        
+          
       </mat-card-actions>
+    
     </mat-card>
   </div>
   

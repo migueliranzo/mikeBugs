@@ -26,25 +26,23 @@ export class ProjectService {
 
       this.store.collection("user-project", ref=> ref.where("projectId","==",element.get("projectId"))).valueChanges().pipe(first()).subscribe(users=> {
 
-        this.store.collection("projects").doc(element.get("projectId")).valueChanges().subscribe((x:any)=> x != undefined? projects.push({...x, users: users}) : null);
+        this.store.collection("projects").doc(element.get("projectId")).valueChanges().pipe(first()).subscribe((x:any)=> x != undefined? projects.push({...x, users: users}) : null);
       } );
       }
     });
     
     return of(projects);
-    
-
   }
 
   saveProject(project: any, owner: any) {
     let uid = owner.uid;
     let email = owner.email;
     
-      this.store.collection("projects").add(project).then(x=> {
+    return from(this.store.collection("projects").add(project).then(x=> {
       this.store.collection("projects").doc(x.id).update({id:x.id});
-      this.store.collection("user-project").add({uid:uid, email:email, role:"owner", projectId:x.id});
-      return x.id;
-    });
+      this.store.collection("user-project").add({uid:uid, email:email, role:3, projectId:x.id});
+      
+    }));
   }
 
   sendInvitation(invitation:string){

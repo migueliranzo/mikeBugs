@@ -8,10 +8,9 @@ import { ProjectService } from 'src/app/common/services/project.service';
   templateUrl: './project-dialog.component.html',
   styleUrls: ['./project-dialog.component.scss']
 })
-export class ProjectDialogComponent implements OnInit {
+export class ProjectDialogComponent {
 
   @Output() modifiedProject:EventEmitter<any> = new EventEmitter();
-  @Input() currentUser:any;
 
   editedProject = new FormGroup({
     title: new FormControl(''),
@@ -19,14 +18,8 @@ export class ProjectDialogComponent implements OnInit {
     description: new FormControl('')
   });
 
-  constructor(private projectService:ProjectService) { }
-
-  ngOnInit(): void {
-  }
-  
   saveProject(){
-    let newID = this.projectService.saveProject(this.editedProject.value, this.currentUser);
-    this.modifiedProject.emit({...this.editedProject.value, id: newID})
+    this.modifiedProject.emit(this.editedProject.value);
   }
 
 }
