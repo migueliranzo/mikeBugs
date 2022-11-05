@@ -5,18 +5,18 @@
 
     <div class="flex-1 border rounded flex-grow-[2]  ">
         <div class="bg-[#ff4081] px-2 py-1 text-white text-lg">
-        {{ticket.project}} {{ticket.category}} details
+        {{project.title}} {{category[ticket.category]}} details
         </div>
         <div class="bg-[#f7f7f7] p-2  flex justify-between">
 
         <div class="text-xl"> 
-            <p class="flex items-center"> {{ticket.category}} {{ticket.id}}  </p>
+            <p class="flex items-center underline"> {{ category[ticket.category] }} {{ticket.id}}  </p>
             <p > {{ticket.name}}</p>
         </div>
 
         <div class="flex flex-col items-center gap-1">
-           <img src="{{svg}}" alt="profilePIC" height="50" width="50" class="rounded-full border bg-[#fafafa7d]">
-            <p>{{ticket.assigned}}</p>
+        <img src="{{svg}}" alt="profilePIC" height="50" width="50" class="rounded-full border bg-[#fafafa7d]">
+            <p>{{  ticket.assigned.substr(0,  ticket.assigned.indexOf('@')) }}</p>
         </div>
 
         </div>
@@ -52,7 +52,7 @@
 
                 <p class="flex justify-between">  <span class="font-medium"> Category</span> {{ticket.category}}</p>
 
-                <p class="flex justify-between">    <span class="font-medium"> Reporter</span> {{ticket.reporter}}</p>
+                <p class="flex justify-between">    <span class="font-medium"> Reporter</span> {{ticket.reporter.substr(0,  ticket.reporter.indexOf('@')) }}</p>
             </div>
         </div>
 

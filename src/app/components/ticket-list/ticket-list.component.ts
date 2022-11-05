@@ -11,6 +11,9 @@ import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { TicketDialogComponent } from './ticket-dialog/ticket-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'src/environments/environment';
+import { Auth } from '@angular/fire/auth';
+import { ProjectService } from 'src/app/common/services/project.service';
+import { AuthService } from 'src/app/common/services/auth.service';
 
 @Component({
   selector: 'app-ticket-list',
@@ -19,12 +22,14 @@ import { environment } from 'src/environments/environment';
 })
 export class ticketListComponent implements OnInit {
 
-  selectedProject: any;
+  selectedProjectId: any;
+  selectedProject$: any;
   tickets$?: Observable<any[]>;
   dataSource!: MatTableDataSource<any>;
   priority: any;
   status: any;
   severity: any;
+  currentUser: string | null | undefined;
 
   readonly formControl: FormGroup;
 
@@ -44,16 +49,14 @@ export class ticketListComponent implements OnInit {
   {label:"Status", content: this.samples},{label:"Priority", content: this.samples},{label:"Category", content: this.samples},{label:"Project", content: this.samples},
   {label:"Severity", content: this.samples}];
 
-  displayedColumns: string[] = ["id", "priority" , "name" , "project", "severity","status", "category", "lastUpdateChange"];
+  displayedColumns: string[] = ["id","name" ,"priority", "severity" ,"status", "category", "lastUpdateChange"];
 
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
-  constructor(private route: ActivatedRoute, private router: Router, private ticketService: TicketService, formBuilder: FormBuilder, public matDialog: MatDialog) {
-
   
-    
+
+constructor(private route: ActivatedRoute, private router: Router, private ticketService: TicketService, public authService: AuthService, public projectService: ProjectService,  formBuilder: FormBuilder, public matDialog: MatDialog, public auth: Auth) {
 
     this.formControl = formBuilder.group({
       status: null,
@@ -71,17 +74,20 @@ export class ticketListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
     this.route.paramMap.subscribe((params: ParamMap) => {
       if (params.get('filter') == null || (params.get('filter') ==  undefined)) {
         return;
       }
-      this.selectedProject = params.get('filter');
       
+      this.authService.currentUser$.subscribe(x=> this.currentUser = x?.email);
+      this.selectedProjectId = params.get('filter');
+      this.selectedProject$ = this.projectService.getProject(this.selectedProjectId);
+      this.selectedProject$.subscribe((x:any)=> console.log(x));
+      
+      this.setUpDataTable();
+      this.getAllVariables();
     });
-
-  
-    this.setUpDataTable();
-    this.getAllVariables();
   }
 
   /*
@@ -98,10 +104,10 @@ export class ticketListComponent implements OnInit {
   */
 
   setUpDataTable(){
-    this.ticketService.getAllTickets().valueChanges().pipe(tap(x=> {
+    
+    this.ticketService.getProjectTickets(this.selectedProjectId).valueChanges().pipe(tap(x=> {
 
       this.dataSource = new MatTableDataSource(x)
-      console.log(x);
       
       this.dataSource.filterPredicate = ((data, filter:any) => {
         const a = filter.status == null || data.status === filter.status ;
@@ -131,22 +137,28 @@ export class ticketListComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
-  
   }
 
   applyFilters(val:any){
     console.log(val);
-    
   }
 
   goDetailTicket(ticket:Ticket){
-    console.log(ticket);
+    this.selectedProject$.subscribe((x:any)=> {
+      this.router.navigate(["/ticket-detail", { filter: JSON.stringify(ticket), project: JSON.stringify(x)}])
+    });
     
-    this.router.navigate(["/ticket-detail", { filter: JSON.stringify(ticket) }])
+  
   }
 
   openDialog(){
     let dialogInstance = this.matDialog.open(TicketDialogComponent); 
+    dialogInstance.componentInstance.project$ = this.selectedProject$;
+    dialogInstance.componentInstance.ticketToAdd.subscribe(x=>{
+      console.log(this.currentUser);
+      
+      this.ticketService.saveTicket(x,this.selectedProjectId, this.currentUser);
+    })
   }
 
 }

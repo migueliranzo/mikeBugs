@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { Firestore } from '@angular/fire/firestore';
+import { Firestore, where } from '@angular/fire/firestore';
 import { first, from } from 'rxjs';
 import { of } from 'rxjs/internal/observable/of';
 import { Ticket } from '../models/ticket';
@@ -17,8 +17,12 @@ export class TicketService {
     return this.store.collection('tickets');
   }
 
-  saveTicket(ticket: any){
-    this.store.collection("tickets",ref => ref.where("project", "==", 0)).get().subscribe(x=> this.store.collection("tickets").add({...ticket, id: x.size}));
+  getProjectTickets(projectId: string){
+    return this.store.collection('tickets',ref=> ref.where("project","==",projectId));
+  }
+
+  saveTicket(ticket: any, projectId:string, reporterMail: any){
+    this.store.collection("tickets",ref => ref.where("project", "==", projectId)).get().subscribe(x=> this.store.collection("tickets").add({...ticket, id: x.size, project: projectId, reporter: reporterMail}));
   }
 
 }

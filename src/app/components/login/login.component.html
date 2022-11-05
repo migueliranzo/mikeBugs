@@ -33,7 +33,7 @@
                 <mat-error *ngIf="repeatPasswordFormControl.hasError('required')">
                     Repeat the password
                 </mat-error>
-                <mat-error *ngIf="repeatPasswordFormControl.hasError('forbiddenName')">
+                <mat-error *ngIf="repeatPasswordFormControl.hasError('passwordMatch')">
                     Passwords must match
                 </mat-error>
             </mat-form-field>

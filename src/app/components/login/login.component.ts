@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   passwordFormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
-  repeatPasswordFormControl = new FormControl('', [Validators.required, Validators.minLength(6), this.forbiddenNameValidator()]);
+  repeatPasswordFormControl = new FormControl('', [Validators.required, Validators.minLength(6), this.passwordMatch()]);
 
   matcher = new ErrorStateMatcher();
 
@@ -67,12 +67,12 @@ export class LoginComponent implements OnInit {
   return true;
 }
 
-forbiddenNameValidator(): ValidatorFn {
+passwordMatch(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     if(control.value == this.passwordFormControl.value){
       return null;
     }else{
-      return {forbiddenName: {value: control.value}};
+      return {passwordMatch: {value: control.value}};
     }
   };
 }

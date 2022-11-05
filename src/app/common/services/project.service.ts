@@ -10,11 +10,16 @@ import { Project } from '../models/project';
 })
 export class ProjectService {
 
-  projects: Project[] = [];
   constructor(private store: AngularFirestore) {}
 
   getAllProjects(){
     return this.store.collection("projects");
+  }
+
+  getProject(projectId:string){ 
+  return this.store.collection("projects").doc(projectId).valueChanges().pipe(switchMap((x:any)=> (
+      this.store.collection("user-project", ref=> ref.where("projectId","==",x.id))).valueChanges().pipe(map(users=> users = {...x, users: users}))
+    ));
   }
 
   getUserProjects(id:string){
@@ -30,7 +35,7 @@ export class ProjectService {
       } );
       }
     });
-    
+
     return of(projects);
   }
 
