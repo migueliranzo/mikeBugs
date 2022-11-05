@@ -39,6 +39,7 @@ import { TicketDialogComponent } from './components/ticket-list/ticket-dialog/ti
 import { LoginComponent } from './components/login/login.component';
 import { AuthService } from './common/services/auth.service';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     TicketDetailComponent,
     ProjectDialogComponent,
     TicketDialogComponent,
-    LoginComponent
+    LoginComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,

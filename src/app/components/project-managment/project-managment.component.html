@@ -1,8 +1,15 @@
-<div class="flex flex-row p-8 gap-8" *ngIf="(projects$ | async)?.length">
+<div class="flex flex-row p-8 gap-8" *ngIf="(projects$ | async)?.length; else spinner">
     <app-project-card [projects]="projects$ | async" class="basis-[33%]" (openProject)="selectProject($event)" ></app-project-card>
     <app-project-detail class="basis-[66%] " (sendEmail)="sendEmail($event)" [selectedProject]="selectedProject"></app-project-detail>
 </div>
 
+
+
 <button (click)="openDialog()" class="right-[30px] bottom-[30px]" style="position: fixed;" mat-fab color="accent">
     <mat-icon>add</mat-icon>
 </button>
+<ng-template #spinner >
+    <div class="flex justify-center h-[70vh] items-center">
+        <app-spinner></app-spinner>
+    </div>
+</ng-template>
