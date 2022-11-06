@@ -134,7 +134,7 @@
 
   <ng-container matColumnDef="category">
     <th mat-header-cell mat-sort-header *matHeaderCellDef>Category</th>
-    <td mat-cell *matCellDef="let element">{{ element.category }}</td>
+    <td mat-cell *matCellDef="let element">{{ categories[element.category] }}</td>
   </ng-container>
 
   <ng-container matColumnDef="status">
@@ -152,9 +152,9 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="lastUpdateChange">
-    <th mat-header-cell mat-sort-header *matHeaderCellDef>Last Updated</th>
-    <td mat-cell *matCellDef="let element">{{ element.lastUpdateChange }}</td>
+  <ng-container matColumnDef="creationDate">
+    <th mat-header-cell mat-sort-header *matHeaderCellDef>Created</th>
+    <td mat-cell *matCellDef="let element">{{formatDate(element.creationDate) }}</td>
   </ng-container>
 
   <ng-container matColumnDef="name">
@@ -178,6 +178,10 @@
     <td class="p-2" colspan="4">No result matches this query</td>
   </tr>
 </table>
+
+<div *ngIf="!dataSource" class="flex justify-center h-[20%] items-center">
+  <app-spinner></app-spinner>
+</div>
 
 <mat-paginator
   [pageSizeOptions]="[50]"

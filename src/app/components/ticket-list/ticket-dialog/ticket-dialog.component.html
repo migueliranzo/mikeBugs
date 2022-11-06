@@ -49,6 +49,7 @@
       <mat-form-field class="example-full-width" appearance="outline">
         <mat-label>Assigned to</mat-label>
         <mat-select formControlName="assigned">
+          <mat-option value="unassigned">unassigned</mat-option>
             <mat-option *ngFor="let user of (project$ | async)?.users" [value]="user.email" >
               {{user.email}}
             </mat-option>

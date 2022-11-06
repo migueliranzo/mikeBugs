@@ -33,14 +33,9 @@ export class TicketDetailComponent implements OnInit {
     console.log(this.ticket);
     console.log(this.project);
     
+    this.setProfilePic();
 
-    this.svg = createAvatar(style, {
-      seed: this.ticket.assigned,
-      dataUri: true
-    });
-
-    console.log(this.svg);
-    
+  
 
   }
 
@@ -51,5 +46,11 @@ export class TicketDetailComponent implements OnInit {
     this.category = environment.categories;
   }
 
-
+  setProfilePic(){
+      this.svg = createAvatar(style, {
+        seed: this.ticket.assigned,
+        dataUri: true
+      });    
+    }
+    
 }

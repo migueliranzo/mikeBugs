@@ -28,6 +28,7 @@ export class ticketListComponent implements OnInit {
   dataSource!: MatTableDataSource<any>;
   priority: any;
   status: any;
+  categories: any;
   severity: any;
   currentUser: string | null | undefined;
 
@@ -49,7 +50,7 @@ export class ticketListComponent implements OnInit {
   {label:"Status", content: this.samples},{label:"Priority", content: this.samples},{label:"Category", content: this.samples},{label:"Project", content: this.samples},
   {label:"Severity", content: this.samples}];
 
-  displayedColumns: string[] = ["id","name" ,"priority", "severity" ,"status", "category", "lastUpdateChange"];
+  displayedColumns: string[] = ["id","name" ,"priority", "severity" ,"status", "category", "creationDate"];
 
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -128,6 +129,7 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
     this.priority = environment.priority;
     this.status = environment.status;
     this.severity = environment.severity;
+    this.categories = environment.categories;
   }
   
   applySearchFilter(event: Event) {
@@ -151,13 +153,24 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
   
   }
 
+  formatDate(date:any){
+    const today = new Date(date.seconds*1000);
+    const yyyy = today.getFullYear();
+    let mm: any = today.getMonth() + 1; // Months start at 0!
+    let dd:any = today.getDate();
+
+    if (dd < 10) dd = '0' + dd;
+    if (mm < 10) mm = '0' + mm;
+
+    return  (dd + '/' + mm + '/' + yyyy);
+  }
+
   openDialog(){
     let dialogInstance = this.matDialog.open(TicketDialogComponent); 
     dialogInstance.componentInstance.project$ = this.selectedProject$;
-    dialogInstance.componentInstance.ticketToAdd.subscribe(x=>{
-      console.log(this.currentUser);
+    dialogInstance.componentInstance.ticketToAdd.subscribe(ticket=>{
       
-      this.ticketService.saveTicket(x,this.selectedProjectId, this.currentUser);
+      this.ticketService.createTicket(ticket,this.selectedProjectId, this.currentUser);
     })
   }
 

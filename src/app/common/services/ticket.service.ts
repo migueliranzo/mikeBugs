@@ -21,7 +21,7 @@ export class TicketService {
     return this.store.collection('tickets',ref=> ref.where("project","==",projectId));
   }
 
-  saveTicket(ticket: any, projectId:string, reporterMail: any){
+  createTicket(ticket: any, projectId:string, reporterMail: any){
     this.store.collection("tickets",ref => ref.where("project", "==", projectId)).get().subscribe(x=> this.store.collection("tickets").add({...ticket, id: x.size, project: projectId, reporter: reporterMail}));
   }
 
