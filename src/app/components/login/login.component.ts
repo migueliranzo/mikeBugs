@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
         this.invalidCredentials = true 
       }else{
         this.invalidCredentials = false;
-        this.snackBar.open("Email sent!", "OK",{verticalPosition:'bottom',horizontalPosition:'left'});
+        this.snackBar.open("Email sent!", "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
       }
     });
   }

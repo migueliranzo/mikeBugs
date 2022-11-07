@@ -46,11 +46,13 @@
                 <div class="  mb-4">
                     <span   class="font-medium"> Status</span>  
                     <mat-select [ngClass]="{'border border-gray-400 rounded': editMode}" [disabled]="!editMode" [(ngModel)]="ticket.status" >
-                        <mat-option [ngClass]="{
-                            'text-blue-400': ticket.value === 0,
-                            'text-yellow-400': ticket.value === 1,
-                            'text-red-500': ticket.value === 2 ,
-                            'text-green-500': ticket.value === 3 }" *ngFor="let ticket of status" [value]="ticket.value">
+                        <mat-option   [ngClass]="{
+                            'text-green-500': ticket.value === 0,
+                            'text-blue-400': ticket.value === 1,
+                            'text-yellow-400': ticket.value === 2,
+                            'text-red-500': ticket.value === 3,
+                            'text-gray-400': ticket.value === 4
+                          }" *ngFor="let ticket of status" [value]="ticket.value">
                         {{ticket.viewValue}}
                         </mat-option>
                     </mat-select>

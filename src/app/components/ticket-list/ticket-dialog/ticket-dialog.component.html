@@ -76,6 +76,7 @@
     color="accent"
     (click)="saveTicket()"
     mat-dialog-close
+    [disabled]="!editedTicket.valid"
   >
     Save
   </button>

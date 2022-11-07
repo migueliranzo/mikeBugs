@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { serverTimestamp } from '@angular/fire/firestore';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/internal/Observable';
 import { Project } from 'src/app/common/models/project';
 import { User } from 'src/app/common/models/user';
@@ -21,10 +21,10 @@ export class TicketDialogComponent implements OnInit {
   project$!:  Observable<Project>;;
 
   editedTicket = new FormGroup({
-    name: new FormControl(''),
-    priority: new FormControl(),
-    severity: new FormControl(),
-    category: new FormControl(),
+    name: new FormControl('',[Validators.required]),
+    priority: new FormControl('', [Validators.required]),
+    severity: new FormControl('', [Validators.required]),
+    category: new FormControl('', [Validators.required]),
     status: new FormControl(0),
     assigned: new FormControl('unassigned'),
     creationDate: new FormControl(serverTimestamp()),

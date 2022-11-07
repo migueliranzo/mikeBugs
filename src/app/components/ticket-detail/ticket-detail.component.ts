@@ -54,14 +54,14 @@ export class TicketDetailComponent implements OnInit {
     const overlayRef  = this.overlay.create({
       positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically(),
       hasBackdrop: true,
-    }).attach(new ComponentPortal(SpinnerComponent))
+    }).attach(new ComponentPortal(SpinnerComponent));
 
     this.ticketService.updateTicket(ticket).subscribe(error=>{
       if(error){
-        this.snackBar.open("Error, try again later", "OK",{verticalPosition:'bottom',horizontalPosition:'left'});
+        this.snackBar.open("Error, try again later", "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
         overlayRef.destroy();
       }else{
-        this.snackBar.open("Changes saved!", "OK",{verticalPosition:'bottom',horizontalPosition:'left'});
+        this.snackBar.open("Changes saved!", "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
         overlayRef.destroy();
       }
     })

@@ -14,6 +14,10 @@ import { environment } from 'src/environments/environment';
 import { Auth } from '@angular/fire/auth';
 import { ProjectService } from 'src/app/common/services/project.service';
 import { AuthService } from 'src/app/common/services/auth.service';
+import { Overlay } from '@angular/cdk/overlay';
+import { SpinnerComponent } from '../spinner/spinner.component';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-ticket-list',
@@ -44,7 +48,9 @@ export class ticketListComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   
 
-constructor(private route: ActivatedRoute, private router: Router, private ticketService: TicketService, public authService: AuthService, public projectService: ProjectService,  formBuilder: FormBuilder, public matDialog: MatDialog, public auth: Auth) {
+constructor(private route: ActivatedRoute, private router: Router, private ticketService: TicketService,
+    public authService: AuthService, public projectService: ProjectService,  formBuilder: FormBuilder,
+    public matDialog: MatDialog, public auth: Auth, private overlay: Overlay, private snackBar: MatSnackBar) {
 
     this.formControl = formBuilder.group({
       status: null,
@@ -55,6 +61,8 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
       category: null,
       assigned: null,
       reporter: null,
+      startDate: null,
+      endDate: null
     })
     this.formControl.valueChanges.subscribe(value => {
       console.log(value);
@@ -96,8 +104,9 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
         const e = filter.priority == null || data.priority === filter.priority;
         const f = filter.category == null || data.category === filter.category;
         const g = filter.reporter == null || data.reporter === filter.reporter;
-        const h = filter.assigned == null || data.assigned === filter.assigned;
-        return a && b && c && d && e && f;
+        const h = filter.assigned == null || data.assigned === filter.assigned; 
+        const j = !(filter.startDate != null  && filter.endDate != null) || this.dateIsOnRange(new Date(data.creationDate.seconds * 1000), filter.endDate, filter.startDate);
+        return a && b && c && d && e && f && g && h && j;
       }) as (arg0: any, arg1: string) => boolean;
 
     this.dataSource.paginator = this.paginator;
@@ -128,6 +137,15 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
   
   }
 
+  dateIsOnRange(check: Date, to:Date, from:Date){
+    
+    if((check.getTime() <= to.getTime() && check.getTime() >= from.getTime())){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
   formatDate(date:any){
     const today = new Date(date.seconds*1000);
     const yyyy = today.getFullYear();
@@ -145,7 +163,19 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
     dialogInstance.componentInstance.project$ = this.selectedProject$;
     dialogInstance.componentInstance.ticketToAdd.subscribe(ticket=>{
       
-      this.ticketService.createTicket(ticket,this.selectedProjectId, this.currentUser);
+    let overlayRef  = this.overlay.create({
+      positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically(),
+      hasBackdrop: true,
+    }).attach(new ComponentPortal(SpinnerComponent));
+
+      this.ticketService.createTicket(ticket,this.selectedProjectId, this.currentUser).subscribe(error=>{
+        if(error){
+          this.snackBar.open("Error, try again later", "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
+        }else{
+          this.snackBar.open("Ticket created successfully!", "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
+          overlayRef.destroy();
+        }
+      });
     })
   }
 
