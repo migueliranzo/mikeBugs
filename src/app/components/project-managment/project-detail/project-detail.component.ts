@@ -13,7 +13,7 @@ import { environment } from 'src/environments/environment';
 })
 export class ProjectDetailComponent implements OnInit {
   displayedColumns: string[] = [];
-  roles?: any[];
+  roles?: any[] = environment.roles;
   viewMode: boolean = true;
   currentProject: { id: string; title: string; subtitle: string; description: string; tickets: any; users: any; } | undefined;
 
@@ -35,7 +35,6 @@ export class ProjectDetailComponent implements OnInit {
   constructor(private router:Router, public matDialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.roles = environment.roles;
   }
 
   editMode(){

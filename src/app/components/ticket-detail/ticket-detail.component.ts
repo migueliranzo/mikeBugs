@@ -7,6 +7,11 @@ import { environment } from 'src/environments/environment';
 import { TicketService } from 'src/app/common/services/ticket.service';
 import { AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 import { Observable, tap } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import {Overlay} from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ticketListComponent } from '../ticket-list/ticket-list.component';
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 
 @Component({
@@ -29,7 +34,7 @@ export class TicketDetailComponent implements OnInit {
 
   svg:any;
 
-  constructor(private route: ActivatedRoute, private ticketService: TicketService) {}
+  constructor(private route: ActivatedRoute, private ticketService: TicketService, private snackBar: MatSnackBar, private overlay: Overlay) {}
 
   ngOnInit(): void {
     let ticketId = JSON.parse(this.route.snapshot.paramMap.get('filter')!);
@@ -40,11 +45,26 @@ export class TicketDetailComponent implements OnInit {
         this.setProfilePic(y.assigned);
       })) as Observable<Ticket | any> ;
 
+
+
   }
 
   saveTicketChanges(ticket:Ticket){
     this.editMode = false;
-    this.ticketService.updateTicket(ticket);
+    const overlayRef  = this.overlay.create({
+      positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically(),
+      hasBackdrop: true,
+    }).attach(new ComponentPortal(SpinnerComponent))
+
+    this.ticketService.updateTicket(ticket).subscribe(error=>{
+      if(error){
+        this.snackBar.open("Error, try again later", "OK",{verticalPosition:'bottom',horizontalPosition:'left'});
+        overlayRef.destroy();
+      }else{
+        this.snackBar.open("Changes saved!", "OK",{verticalPosition:'bottom',horizontalPosition:'left'});
+        overlayRef.destroy();
+      }
+    })
   }
 
   setProfilePic(assigned:string){

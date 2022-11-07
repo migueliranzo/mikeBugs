@@ -40,6 +40,7 @@ import { LoginComponent } from './components/login/login.component';
 import { AuthService } from './common/services/auth.service';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+import {OverlayModule} from '@angular/cdk/overlay';
 
 
 @NgModule({
@@ -63,6 +64,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     MatSnackBarModule,
     AngularFireModule.initializeApp(environment.firebase),
     MatNativeDateModule,
+    OverlayModule,
     MatDatepickerModule,
     FormsModule,
     MatPaginatorModule,

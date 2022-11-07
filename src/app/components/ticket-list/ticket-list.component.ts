@@ -26,30 +26,17 @@ export class ticketListComponent implements OnInit {
   selectedProject$: any;
   tickets$?: Observable<any[]>;
   dataSource!: MatTableDataSource<any>;
-  priority: any;
-  status: any;
-  categories: any;
-  severity: any;
+  priorities: any = environment.priorityIterable;
+  statuses: any = environment.statusIterable;
+  categories: any = environment.categoriesIterable;
+  severities: any = environment.severityIterable;
+  reporters: any;
+  users: any;
   currentUser: string | null | undefined;
 
   readonly formControl: FormGroup;
 
   //Filter table bindings
-
-
-  //temp
-  samples: any[] = [
-    {viewValue:"Option A",value:0},
-    {viewValue:"Option B",value:1},
-    {viewValue:"Option C",value:2},
-    {viewValue:"Option D",value:3},
-  ];
-
-
-  dropDownfilterStructure:any = [{label:"Name", content: this.samples},{label:"Reported by", content: this.samples},{label:"Assigned to", content: this.samples},
-  {label:"Status", content: this.samples},{label:"Priority", content: this.samples},{label:"Category", content: this.samples},{label:"Project", content: this.samples},
-  {label:"Severity", content: this.samples}];
-
   displayedColumns: string[] = ["tId","name" ,"priority", "severity" ,"status", "category", "creationDate"];
 
 
@@ -65,6 +52,9 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
       name: null,
       project: null,
       priority: null,
+      category: null,
+      assigned: null,
+      reporter: null,
     })
     this.formControl.valueChanges.subscribe(value => {
       console.log(value);
@@ -84,25 +74,13 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
       this.authService.currentUser$.subscribe(x=> this.currentUser = x?.email);
       this.selectedProjectId = params.get('filter');
       this.selectedProject$ = this.projectService.getProject(this.selectedProjectId);
-      this.selectedProject$.subscribe((x:any)=> console.log(x));
+      this.selectedProject$.subscribe((x:any)=> this.users = x.users);
       
       this.setUpDataTable();
-      this.getAllVariables();
     });
   }
 
-  /*
-  
-      reported: null,
-      assigned: null,
-      priority: null,
-      category: null,
-      project: null,
-      createdStart: null,
-      createdEnd: null,
-      updatedStart: null,
-      updatedEnd: null,
-  */
+
 
   setUpDataTable(){
     
@@ -116,7 +94,10 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
         const c = filter.severity == null || data.severity === filter.severity;
         const d = filter.project == null || data.project === filter.project;
         const e = filter.priority == null || data.priority === filter.priority;
-        return a && b && c && d && e;
+        const f = filter.category == null || data.category === filter.category;
+        const g = filter.reporter == null || data.reporter === filter.reporter;
+        const h = filter.assigned == null || data.assigned === filter.assigned;
+        return a && b && c && d && e && f;
       }) as (arg0: any, arg1: string) => boolean;
 
     this.dataSource.paginator = this.paginator;
@@ -125,13 +106,7 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
     })).subscribe();
   }
 
-  getAllVariables() {
-    this.priority = environment.priority;
-    this.status = environment.status;
-    this.severity = environment.severity;
-    this.categories = environment.categories;
-  }
-  
+
   applySearchFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();

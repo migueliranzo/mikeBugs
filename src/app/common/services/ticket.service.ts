@@ -26,7 +26,11 @@ export class TicketService {
   }
 
   updateTicket(ticket:Ticket){
-    this.store.doc(`tickets/${ticket.id}`).update(ticket);
+  return from(this.store.doc(`tickets/${ticket.id}`).update(ticket).then(x=>{
+    return false;
+  }).catch(x=>{
+    return true;
+  }));
   }
 
   createTicket(ticket: any, projectId:string, reporterMail: any){
