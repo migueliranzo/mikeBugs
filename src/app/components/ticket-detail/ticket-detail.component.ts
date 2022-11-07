@@ -4,6 +4,7 @@ import { Ticket } from 'src/app/common/models/ticket';
 import { createAvatar } from '@dicebear/avatars';
 import * as style from '@dicebear/miniavs';
 import { environment } from 'src/environments/environment';
+import { TicketService } from 'src/app/common/services/ticket.service';
 
 
 @Component({
@@ -15,20 +16,22 @@ export class TicketDetailComponent implements OnInit {
   ticket!: Ticket;
   project!: any;
 
-  priority: any;
-  status: any;
-  severity: any;
-  category: any;
+  priority : any = environment.priorityIterable;
+  status: any  =   environment.statusIterable;
+  severity: any  = environment.severityIterable;
+  category : any = environment.categoriesIterable;
+
+  editMode: boolean = false;
   customIMG!: string;
 
   svg:any;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, private ticketService: TicketService) {}
 
   ngOnInit(): void {
     this.ticket = JSON.parse(this.route.snapshot.paramMap.get('filter')!);
     this.project = JSON.parse(this.route.snapshot.paramMap.get('project')!);
-    this.getAllVariables();
+
 
     console.log(this.ticket);
     console.log(this.project);
@@ -39,11 +42,8 @@ export class TicketDetailComponent implements OnInit {
 
   }
 
-  getAllVariables() {
-    this.priority = environment.priority;
-    this.status = environment.status;
-    this.severity = environment.severity;
-    this.category = environment.categories;
+  saveTicketChanges(){
+    this.ticketService.updateTicket(this.ticket);
   }
 
   setProfilePic(){

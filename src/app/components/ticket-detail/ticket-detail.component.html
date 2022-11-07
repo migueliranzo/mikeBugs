@@ -5,26 +5,29 @@
 
     <div class="flex-1 border rounded flex-grow-[2]  ">
         <div class="bg-[#ff4081] px-2 py-1 text-white text-lg">
-        {{project.title}} {{category[ticket.category]}} details
+        {{project.title}} {{category[ticket.category].viewValue}} details
         </div>
         <div class="bg-[#f7f7f7] p-2  flex justify-between">
 
-        <div class="text-xl"> 
-            <p class="flex items-center underline"> {{ category[ticket.category] }} {{ticket.id}}  </p>
-            <p > {{ticket.name}}</p>
+        <div class="text-xl w-[100%]"> 
+            <p class="flex items-center underline"> {{ category[ticket.category].viewValue }} {{ticket.tId}}  </p>
+            <input [(ngModel)]="ticket.name" [ngClass]="{'border border-gray-400 rounded': editMode,'border-red-500':ticket.name.length == 0}" class=" text-ellipsis w-[90%] bg-[#f7f7f7] " [disabled]="!editMode" [value]="ticket.name">
         </div>
 
         <div class="flex flex-col items-center gap-1">
 
-        <ng-container *ngIf="ticket.assigned != 'unassigned'; else unassigned">
-            <img src="{{svg}}" alt="profilePIC" height="50" width="50" class="rounded-full border bg-[#fafafa7d]">
-            <p>{{  ticket.assigned.substr(0,  ticket.assigned.indexOf('@')) }}</p>
-        </ng-container>
+        <img *ngIf="ticket.assigned != 'unassigned'; else unassigned" src="{{svg}}" alt="profilePIC" height="50" width="50" class="rounded-full border bg-[#fafafa7d]">
 
         <ng-template #unassigned>
             <mat-icon class="text-5xl flex-1 items-center" style="width: auto;" [inline]="false">face</mat-icon>
-            <p>Unassigned</p>
         </ng-template>
+
+        <mat-select [ngClass]="{'border border-gray-400 rounded': editMode}" class="my-2" [disabled]="!editMode" [(ngModel)]="ticket.assigned" >
+            <mat-option value="unassigned" >Unassigned</mat-option>
+            <mat-option *ngFor="let user of project.users" [value]="user.email">
+            {{user.email}}
+            </mat-option>
+        </mat-select>
 
         </div>
 
@@ -35,42 +38,72 @@
         <div class="p-2 flex gap-4">
             <div class="flex-1 flex-grow-[2]  ">
                 <p class="border-b font-medium text-base" >Description</p>
-                <textarea class="w-[100%] h-[75%] border rounded p-2 bg-[#fafafa] min-h-[5rem]"> {{ticket.description}} </textarea>
+                <textarea [ngClass]="{'border-gray-400 ': editMode}" [(ngModel)]="ticket.description" [disabled]="!editMode" class="w-[100%]  h-[82%] border rounded p-2 bg-[#fafafa] min-h-[5rem]"> {{ticket.description}} </textarea>
             </div>
             <div class="flex-1">
                 <p class="border-b font-medium text-base ">
                     Info
                 </p>
 
-                <p class="flex justify-between">
-                    <span class="font-medium"> Status</span>  
-                    <span  [ngClass]="{
-                    'text-blue-400': ticket.status === 0,
-                    'text-yellow-400': ticket.status === 1,
-                    'text-green-500': ticket.status === 2 }"> {{status[ticket.status]}}</span> 
-                </p>
+                <div class="  mb-4">
+                    <span   class="font-medium"> Status</span>  
+                    <mat-select [ngClass]="{'border border-gray-400 rounded': editMode}" [disabled]="!editMode" [(ngModel)]="ticket.status" >
+                        <mat-option [ngClass]="{
+                            'text-blue-400': ticket.value === 0,
+                            'text-yellow-400': ticket.value === 1,
+                            'text-red-500': ticket.value === 2 ,
+                            'text-green-500': ticket.value === 3 }" *ngFor="let ticket of status" [value]="ticket.value">
+                        {{ticket.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </div>
 
-                <p class="flex justify-between ">  <span class="font-medium"> Priority</span>  {{priority[ticket.priority]}}</p> 
+                <div class="   mb-4">  
+                    <span class="font-medium"> Priority</span>
+                    <mat-select [ngClass]="{'border border-gray-400 rounded': editMode}" [disabled]="!editMode" [(ngModel)]="ticket.priority" >
+                        <mat-option  *ngFor="let ticket of priority" [value]="ticket.value">
+                        {{ticket.value}}
+                        </mat-option>
+                    </mat-select>
+                </div> 
 
-                <p class="flex items-center gap-2 justify-between">     <span class="font-medium"> Severity</span> <mat-icon [ngClass]="{
-                    'text-green-600': ticket.severity === 0,
-                    'text-yellow-500': ticket.severity === 1,
-                    'text-red-500': ticket.severity === 2,
-                    'text-red-700': ticket.severity === 3
-                    }" > {{severity[ticket.severity]}}
-                </mat-icon>  </p>
+                <div class=" mb-4">
+                    <span class="font-medium"> Severity</span> 
+                    <div class="flex items-center gap-3">
+                        <mat-icon style="overflow: visible;" [ngClass]="{
+                            'text-green-600': ticket.severity === 0,
+                            'text-yellow-500': ticket.severity === 1,
+                            'text-red-500': ticket.severity=== 2,
+                            'text-red-700': ticket.severity === 3
+                            }" > {{severity[ticket.severity].icon}}</mat-icon> 
+                        <mat-select [ngClass]="{'border border-gray-400 rounded': editMode}" [disabled]="!editMode" [(ngModel)]="ticket.severity" >
+                            <mat-option *ngFor="let ticket of severity" [value]="ticket.value">
+                                {{ticket.viewValue}}  
+                            </mat-option> 
+                        </mat-select>
+                    </div>
+                </div>
 
-                <p class="flex justify-between">  <span class="font-medium"> Category</span> {{ticket.category}}</p>
+                <div class=" mb-4 ">  <span class="font-medium"> Category</span>
+                    <mat-select [ngClass]="{'border border-gray-400 rounded': editMode}" [disabled]="!editMode" [(ngModel)]="ticket.category" >
+                        <mat-option  *ngFor="let ticket of category" [value]="ticket.value">
+                            {{ticket.viewValue}}  
+                        </mat-option> 
+                    </mat-select> 
+                </div>
 
                 <p class="flex justify-between">    <span class="font-medium"> Reporter</span> {{ticket.reporter.substr(0,  ticket.reporter.indexOf('@')) }}</p>
             </div>
         </div>
-
+        <div class="flex justify-end gap-4 m-3" >
+            <button mat-raised-button *ngIf="editMode" [disabled]="ticket.name.length == 0" (click)="saveTicketChanges()"> Save changes <mat-icon>save</mat-icon></button>
+            <button mat-raised-button color="accent" (click)="editMode = !editMode" > Edit <mat-icon>edit</mat-icon></button>
+        </div>
     </div>
 
     <div class="flex-1 border rounded ">
         <div class="bg-[#ff4081] px-2 py-1 text-white text-lg">
-           <span class="flex items-center gap-2">Ticket history<mat-icon>schedule</mat-icon> </span>
+        <span class="flex items-center gap-2">Ticket history<mat-icon>schedule</mat-icon> </span>
 
         </div>
         The history I guess lil
@@ -83,9 +116,8 @@
         <span class="flex items-center gap-2 m-0">Ticket comments<mat-icon>chat</mat-icon> </span>
     </div>
     <div class="flex flex-col">
-       Comment
+    Comment
     </div>
-   
 </div>
 
 </div>

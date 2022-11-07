@@ -50,7 +50,7 @@ export class ticketListComponent implements OnInit {
   {label:"Status", content: this.samples},{label:"Priority", content: this.samples},{label:"Category", content: this.samples},{label:"Project", content: this.samples},
   {label:"Severity", content: this.samples}];
 
-  displayedColumns: string[] = ["id","name" ,"priority", "severity" ,"status", "category", "creationDate"];
+  displayedColumns: string[] = ["tId","name" ,"priority", "severity" ,"status", "category", "creationDate"];
 
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

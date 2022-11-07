@@ -21,8 +21,15 @@ export class TicketService {
     return this.store.collection('tickets',ref=> ref.where("project","==",projectId));
   }
 
-  createTicket(ticket: any, projectId:string, reporterMail: any){
-    this.store.collection("tickets",ref => ref.where("project", "==", projectId)).get().subscribe(x=> this.store.collection("tickets").add({...ticket, id: x.size, project: projectId, reporter: reporterMail}));
+  updateTicket(ticket:Ticket){
+    this.store.doc(`tickets/${ticket.id}`).update(ticket);
   }
 
+  createTicket(ticket: any, projectId:string, reporterMail: any){
+    this.store.collection("tickets",ref => ref.where("project", "==", projectId)).get().subscribe(x=> this.store.collection("tickets").add({...ticket, tId: x.size, project: projectId, reporter: reporterMail}).then(x=>{
+      this.store.collection("tickets").doc(x.id).update({id:x.id});
+    }));
+  }
+
+  
 }

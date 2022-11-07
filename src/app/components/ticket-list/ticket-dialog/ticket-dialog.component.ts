@@ -14,10 +14,10 @@ import { environment } from 'src/environments/environment';
 })
 export class TicketDialogComponent implements OnInit {
 
-  priorities: any[] = [{viewValue:"Low", value:0},{viewValue:"Medium", value:1},{viewValue:"High", value:2},{viewValue:"Critical", value:3}];
-  statuses: any[] = [{viewValue:"Proposed", value:0},{viewValue:"Active", value:1},{viewValue:"Closed", value:2},{viewValue:"Created", value:3}];
-  severities: any[] = [{viewValue:"Low", value:0},{viewValue:"Medium", value:1},{viewValue:"High", value:2},{viewValue:"Critical", value:3}];
-  categories: any[] = [{viewValue:"Bug", value:0},{viewValue:"Task", value:1},{viewValue:"Requirement", value:2},{viewValue:"Test case", value:3}];
+  priorities: any[] = environment.priorityIterable;
+  statuses: any[] = environment.statusIterable;
+  severities: any[] = environment.severityIterable;
+  categories: any[] = environment.categoriesIterable;
   project$!:  Observable<Project>;;
 
   editedTicket = new FormGroup({

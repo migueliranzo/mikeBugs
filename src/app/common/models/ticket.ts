@@ -12,5 +12,6 @@ export interface Ticket {
     project:number;
     creationDate: string;
     lastUpdateChange: string;
+    tId: number;
 
 }
