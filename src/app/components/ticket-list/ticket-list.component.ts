@@ -147,7 +147,7 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
 
   goDetailTicket(ticket:Ticket){
     this.selectedProject$.subscribe((x:any)=> {
-      this.router.navigate(["/ticket-detail", { filter: JSON.stringify(ticket), project: JSON.stringify(x)}])
+      this.router.navigate(["/ticket-detail", { filter: JSON.stringify(ticket.id), project: JSON.stringify(x)}])
     });
     
   

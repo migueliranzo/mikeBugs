@@ -32,7 +32,7 @@ export class TicketDetailComponent implements OnInit {
   constructor(private route: ActivatedRoute, private ticketService: TicketService) {}
 
   ngOnInit(): void {
-    let ticketId = JSON.parse(this.route.snapshot.paramMap.get('filter')!).id;
+    let ticketId = JSON.parse(this.route.snapshot.paramMap.get('filter')!);
     this.project = JSON.parse(this.route.snapshot.paramMap.get('project')!);
   
     this.ticket$ = this.ticketService.getTicket(ticketId).valueChanges().pipe(tap(x=>{

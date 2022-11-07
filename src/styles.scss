@@ -49,3 +49,8 @@ app-ticket-list .mat-paginator-page-size{
 app-ticket-detail .mat-select-disabled .mat-select-value{
     color: black;
 }
+
+app-ticket-detail .mat-select-value{
+
+    padding: 4px;
+}
