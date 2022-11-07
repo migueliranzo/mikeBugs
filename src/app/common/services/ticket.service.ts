@@ -17,6 +17,10 @@ export class TicketService {
     return this.store.collection('tickets');
   }
 
+  getTicket(id:number){
+    return this.store.doc(`tickets/${id}`);
+  }
+
   getProjectTickets(projectId: string){
     return this.store.collection('tickets',ref=> ref.where("project","==",projectId));
   }

@@ -5,6 +5,8 @@ import { createAvatar } from '@dicebear/avatars';
 import * as style from '@dicebear/miniavs';
 import { environment } from 'src/environments/environment';
 import { TicketService } from 'src/app/common/services/ticket.service';
+import { AngularFirestoreDocument } from '@angular/fire/compat/firestore';
+import { Observable, tap } from 'rxjs';
 
 
 @Component({
@@ -13,7 +15,8 @@ import { TicketService } from 'src/app/common/services/ticket.service';
   styleUrls: ['./ticket-detail.component.scss'],
 })
 export class TicketDetailComponent implements OnInit {
-  ticket!: Ticket;
+
+  ticket$?: Observable<Ticket>;
   project!: any;
 
   priority : any = environment.priorityIterable;
@@ -29,26 +32,24 @@ export class TicketDetailComponent implements OnInit {
   constructor(private route: ActivatedRoute, private ticketService: TicketService) {}
 
   ngOnInit(): void {
-    this.ticket = JSON.parse(this.route.snapshot.paramMap.get('filter')!);
+    let ticketId = JSON.parse(this.route.snapshot.paramMap.get('filter')!).id;
     this.project = JSON.parse(this.route.snapshot.paramMap.get('project')!);
-
-
-    console.log(this.ticket);
-    console.log(this.project);
-    
-    this.setProfilePic();
-
   
+    this.ticket$ = this.ticketService.getTicket(ticketId).valueChanges().pipe(tap(x=>{
+        let y = x as Ticket;
+        this.setProfilePic(y.assigned);
+      })) as Observable<Ticket | any> ;
 
   }
 
-  saveTicketChanges(){
-    this.ticketService.updateTicket(this.ticket);
+  saveTicketChanges(ticket:Ticket){
+    this.editMode = false;
+    this.ticketService.updateTicket(ticket);
   }
 
-  setProfilePic(){
+  setProfilePic(assigned:string){
       this.svg = createAvatar(style, {
-        seed: this.ticket.assigned,
+        seed: assigned,
         dataUri: true
       });    
     }

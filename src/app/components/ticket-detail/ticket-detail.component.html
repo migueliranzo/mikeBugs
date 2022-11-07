@@ -1,9 +1,9 @@
 <div class="flex flex-col">
 
 
-<div class="flex m-6 gap-4">
+<div  class="flex m-6 gap-4">
 
-    <div class="flex-1 border rounded flex-grow-[2]  ">
+    <div *ngIf="ticket$ | async as ticket;" class="flex-1 border rounded flex-grow-[2]  ">
         <div class="bg-[#ff4081] px-2 py-1 text-white text-lg">
         {{project.title}} {{category[ticket.category].viewValue}} details
         </div>
@@ -30,8 +30,6 @@
         </mat-select>
 
         </div>
-
-    
         </div>
 
         
@@ -96,7 +94,7 @@
             </div>
         </div>
         <div class="flex justify-end gap-4 m-3" >
-            <button mat-raised-button *ngIf="editMode" [disabled]="ticket.name.length == 0" (click)="saveTicketChanges()"> Save changes <mat-icon>save</mat-icon></button>
+            <button mat-raised-button *ngIf="editMode" [disabled]="ticket.name.length == 0" (click)="saveTicketChanges(ticket)"> Save changes <mat-icon>save</mat-icon></button>
             <button mat-raised-button color="accent" (click)="editMode = !editMode" > Edit <mat-icon>edit</mat-icon></button>
         </div>
     </div>
@@ -104,7 +102,6 @@
     <div class="flex-1 border rounded ">
         <div class="bg-[#ff4081] px-2 py-1 text-white text-lg">
         <span class="flex items-center gap-2">Ticket history<mat-icon>schedule</mat-icon> </span>
-
         </div>
         The history I guess lil
     </div>
