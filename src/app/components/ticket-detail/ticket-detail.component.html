@@ -145,7 +145,7 @@
                 </mat-expansion-panel-header>
                 <ng-container *ngFor="let property of update | keyvalue">
                 
-                    <div *ngIf="getValue(property).oldValue != undefined" class="flex flex-col  my-4">
+                    <div *ngIf="getValue(property).oldValue != undefined" class="flex flex-col  mb-6 mt-3">
                     <p class="font-medium capitalize "> {{property.key}}    </p>
                     <div class="flex gap-2">
                         <span class="bg-green-200 px-2 py-[6px] rounded-sm" > {{ getValue(property).newValue }} </span>

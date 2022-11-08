@@ -27,7 +27,7 @@ export class TicketService {
   getTicket(id:number){
     return  combineLatest([
     this.store.doc(`tickets/${id}`).get(), 
-    this.store.collection(`tickets/${id}/history`).get(),
+    this.store.collection(`tickets/${id}/history`,ref=> ref.orderBy("timestamp","desc")).get(),
   ]).pipe(map(([ticket,history]) => ({ 
       ticketObj: ticket.data() as Ticket, 
       ticketHistory: history.docChanges().map(x=> x.doc.data())
@@ -43,13 +43,14 @@ export class TicketService {
     return combineLatest([
       this.store.doc(`tickets/${newTicket.id}`).get(),
       this.auth.currentUser$,
-    ]).pipe(switchMap( ([oldTicket,user]) =>(
-      oldTicket.ref.collection("history").add(this.getTicketChanges(newTicket, oldTicket.data() as Ticket, user?.email as any)).then(x=>{
+    ]).pipe(switchMap( ([oldTicket,user]) =>( 
+      this.areDifferent(newTicket, oldTicket.data() as Ticket) ? 
+        oldTicket.ref.collection("history").add(this.getTicketChanges(newTicket, oldTicket.data() as Ticket, user?.email as any)).then(x=>{
         oldTicket.ref.update(newTicket);
         return false;
       }).catch(x=>{
         return true;
-      })
+      }) : of(true)
     )));
 
   }
@@ -70,7 +71,7 @@ export class TicketService {
 
   getTicketChanges(newTicket:Ticket, oldTicket:Ticket, user: string){
     let changes: any = {};
-
+    
     for (const property in newTicket) {
       if((newTicket[property as keyof Ticket] != oldTicket[property as keyof Ticket]) && !(property == "creationDate" || property == "lastUpdateChange")){
         if(property != "name" && property != "description" && property != "assigned"){
@@ -84,4 +85,17 @@ export class TicketService {
   
   return {...changes, timestamp: serverTimestamp(), author: user};
 }
+
+areDifferent(newTicket:Ticket, oldTicket:Ticket){
+
+  for (const property in newTicket) {
+    if((newTicket[property as keyof Ticket] != oldTicket[property as keyof Ticket]) && !(property == "creationDate" || property == "lastUpdateChange")){
+
+      return true;
+    }
+  }
+  return false;
+}
+
+
 }

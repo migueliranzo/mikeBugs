@@ -43,10 +43,7 @@ export class TicketDetailComponent implements OnInit {
     let ticketId = JSON.parse(this.route.snapshot.paramMap.get('filter')!);
     this.project = JSON.parse(this.route.snapshot.paramMap.get('project')!);
   
-    this.ticket$ = this.ticketService.getTicket(ticketId).pipe(tap(x=>{
-        
-        this.setProfilePic(x.ticketObj.assigned);
-      }));
+    this.ticket$ = this.getTicket(ticketId);
   }
 
   saveTicketChanges(ticket:Ticket){
@@ -60,10 +57,11 @@ export class TicketDetailComponent implements OnInit {
     this.ticketService.updateTicket(ticket).subscribe(error=>{
       
       if(error){
-        this.snackBar.open("Error, try again later", "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
+        this.snackBar.open("Nothing to update", "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
         overlayRef.destroy();
       }else{
         this.snackBar.open("Changes saved!", "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
+        this.ticket$ = this.getTicket(ticket.id);
         overlayRef.destroy();
       }
     })
@@ -73,7 +71,7 @@ export class TicketDetailComponent implements OnInit {
       this.svg = createAvatar(style, {
         seed: assigned,
         dataUri: true
-      });    
+      });
     }
 
     formatDate(date:any){
@@ -81,18 +79,26 @@ export class TicketDetailComponent implements OnInit {
       const yyyy = today.getFullYear();
       let mm: any = today.getMonth() + 1; // Months start at 0!
       let dd:any = today.getDate();
-  
+      
       let h: any = today.getHours()
       let mins: any = today.getMinutes()
 
       if (dd < 10) dd = '0' + dd;
       if (mm < 10) mm = '0' + mm;
-  
+
       return  (dd + '/' + mm + '/' + yyyy + " " + h + ":" + mins);
     }
 
     getValue(property:any){
       return property.value;
+    }
+
+    getTicket(ticketId:number){
+      return this.ticketService.getTicket(ticketId).pipe(tap(x=>{
+        
+        this.setProfilePic(x.ticketObj.assigned);
+        
+      }));
     }
     
 }
