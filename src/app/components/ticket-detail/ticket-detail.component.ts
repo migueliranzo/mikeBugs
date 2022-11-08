@@ -21,7 +21,10 @@ import { SpinnerComponent } from '../spinner/spinner.component';
 })
 export class TicketDetailComponent implements OnInit {
 
-  ticket$?: Observable<Ticket>;
+  ticket$?: Observable<{
+    ticketObj: Ticket;
+    ticketHistory: unknown[];
+  }>;
   project!: any;
 
   priority : any = environment.priorityIterable;
@@ -40,23 +43,22 @@ export class TicketDetailComponent implements OnInit {
     let ticketId = JSON.parse(this.route.snapshot.paramMap.get('filter')!);
     this.project = JSON.parse(this.route.snapshot.paramMap.get('project')!);
   
-    this.ticket$ = this.ticketService.getTicket(ticketId).valueChanges().pipe(tap(x=>{
-        let y = x as Ticket;
-        this.setProfilePic(y.assigned);
-      })) as Observable<Ticket | any> ;
-
-
-
+    this.ticket$ = this.ticketService.getTicket(ticketId).pipe(tap(x=>{
+        
+        this.setProfilePic(x.ticketObj.assigned);
+      }));
   }
 
   saveTicketChanges(ticket:Ticket){
     this.editMode = false;
+
     const overlayRef  = this.overlay.create({
       positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically(),
       hasBackdrop: true,
     }).attach(new ComponentPortal(SpinnerComponent));
 
     this.ticketService.updateTicket(ticket).subscribe(error=>{
+      
       if(error){
         this.snackBar.open("Error, try again later", "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
         overlayRef.destroy();
