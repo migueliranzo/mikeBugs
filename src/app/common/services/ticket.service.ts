@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Firestore, serverTimestamp, where } from '@angular/fire/firestore';
 import { combineLatest, first, from, map, switchMap, tap } from 'rxjs';
 import { of } from 'rxjs/internal/observable/of';
+import { environment } from 'src/environments/environment';
 import { Ticket } from '../models/ticket';
 import { AuthService } from './auth.service';
 
@@ -11,6 +12,10 @@ import { AuthService } from './auth.service';
 })
 export class TicketService {
 
+  priority : any = environment.priorityIterable;
+  status: any  =   environment.statusIterable;
+  severity: any  = environment.severityIterable;
+  category : any = environment.categoriesIterable;
 
   constructor(private store: AngularFirestore, private auth: AuthService) { }
 
@@ -64,16 +69,19 @@ export class TicketService {
   }
 
   getTicketChanges(newTicket:Ticket, oldTicket:Ticket, user: string){
-    let changes: any = {timestamp: serverTimestamp(), author: user};
+    let changes: any = {};
 
     for (const property in newTicket) {
       if((newTicket[property as keyof Ticket] != oldTicket[property as keyof Ticket]) && !(property == "creationDate" || property == "lastUpdateChange")){
-        changes["old"+property] = oldTicket[property as keyof Ticket];
-        changes["new"+property] = newTicket[property as keyof Ticket];
+        if(property != "name" && property != "description" && property != "assigned"){
+        //@ts-ignore
+        changes[property] = { oldValue: this[property][oldTicket[property as keyof Ticket]].viewValue,  newValue: this[property][newTicket[property as keyof Ticket]].viewValue};
+      }else{
+        changes[property] = { oldValue: oldTicket[property as keyof Ticket],  newValue: newTicket[property as keyof Ticket]};
       }
     }
-    
-    return changes;
   }
   
+  return {...changes, timestamp: serverTimestamp(), author: user};
+}
 }

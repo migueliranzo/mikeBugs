@@ -39,7 +39,7 @@
             </div>
             <div class="flex-1">
                 <p class="border-b font-medium text-base ">
-                    Info
+                    Properties
                 </p>
 
                 <div class="  mb-4">
@@ -132,7 +132,30 @@
         <div class="bg-[#ff4081] px-2 py-1 text-white text-lg">
         <span class="flex items-center gap-2">Ticket history<mat-icon>schedule</mat-icon> </span>
         </div>
-        The history I guess lil
+
+        <mat-accordion>
+            <mat-expansion-panel hideToggle *ngFor="let update of (ticket$ | async)?.ticketHistory">
+                <mat-expansion-panel-header>
+                <mat-panel-title>
+                {{update.author}}
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{ update.timestamp ? formatDate(update.timestamp) : ""}}
+                </mat-panel-description>
+                </mat-expansion-panel-header>
+                <ng-container *ngFor="let property of update | keyvalue">
+                
+                    <div *ngIf="getValue(property).oldValue != undefined" class="flex flex-col  my-4">
+                    <p class="font-medium capitalize "> {{property.key}}    </p>
+                    <div class="flex gap-2">
+                        <span class="bg-green-200 px-2 py-[6px] rounded-sm" > {{ getValue(property).newValue }} </span>
+                        <span class="bg-red-200 px-2  py-[6px] rounded-sm line-through" > {{ getValue(property).oldValue }} </span>
+                    </div> 
+                    </div>
+                </ng-container>
+            </mat-expansion-panel>
+        </mat-accordion>
+    
     </div>
 
 </div>

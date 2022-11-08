@@ -41,6 +41,7 @@ import { AuthService } from './common/services/auth.service';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import {OverlayModule} from '@angular/cdk/overlay';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 
 @NgModule({
@@ -66,6 +67,7 @@ import {OverlayModule} from '@angular/cdk/overlay';
     MatNativeDateModule,
     OverlayModule,
     MatDatepickerModule,
+    MatExpansionModule,
     FormsModule,
     MatPaginatorModule,
     MatDialogModule,

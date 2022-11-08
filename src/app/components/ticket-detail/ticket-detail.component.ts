@@ -23,7 +23,7 @@ export class TicketDetailComponent implements OnInit {
 
   ticket$?: Observable<{
     ticketObj: Ticket;
-    ticketHistory: unknown[];
+    ticketHistory: any[];
   }>;
   project!: any;
 
@@ -74,6 +74,25 @@ export class TicketDetailComponent implements OnInit {
         seed: assigned,
         dataUri: true
       });    
+    }
+
+    formatDate(date:any){
+      const today = new Date(date.seconds*1000);
+      const yyyy = today.getFullYear();
+      let mm: any = today.getMonth() + 1; // Months start at 0!
+      let dd:any = today.getDate();
+  
+      let h: any = today.getHours()
+      let mins: any = today.getMinutes()
+
+      if (dd < 10) dd = '0' + dd;
+      if (mm < 10) mm = '0' + mm;
+  
+      return  (dd + '/' + mm + '/' + yyyy + " " + h + ":" + mins);
+    }
+
+    getValue(property:any){
+      return property.value;
     }
     
 }
