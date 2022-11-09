@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Firestore, serverTimestamp, where } from '@angular/fire/firestore';
-import { combineLatest, first, from, map, switchMap, tap } from 'rxjs';
+import { combineLatest, concat, first, from, map, switchMap, tap } from 'rxjs';
 import { of } from 'rxjs/internal/observable/of';
 import { environment } from 'src/environments/environment';
 import { Ticket } from '../models/ticket';
@@ -26,13 +26,13 @@ export class TicketService {
 
   getTicket(id:number){
     return  combineLatest([
-    this.store.doc(`tickets/${id}`).get(), 
-    this.store.collection(`tickets/${id}/history`,ref=> ref.orderBy("timestamp","desc")).get(),
-    this.store.collection(`tickets/${id}/comments`,ref=> ref.orderBy("timestamp","desc")).get()
+    this.store.doc(`tickets/${id}`).valueChanges(), 
+    this.store.collection(`tickets/${id}/history`,ref=> ref.orderBy("timestamp","desc")).valueChanges(),
+    this.store.collection(`tickets/${id}/comments`,ref=> ref.orderBy("timestamp","desc")).valueChanges()
   ]).pipe(map(([ticket,history, comments]) => ({ 
-      ticketObj: ticket.data() as Ticket, 
-      ticketHistory: history.docChanges().map(x=> x.doc.data()),
-      ticketComments: comments.docChanges().map(x=> x.doc.data()),
+      ticketObj: ticket, 
+      ticketHistory: history,
+      ticketComments: comments,
   })));
   }
 
@@ -100,15 +100,23 @@ areDifferent(newTicket:Ticket, oldTicket:Ticket){
 }
 
 addComment(newComment:string, ticketId:number){
-  console.log(newComment);
-  
-  return this.auth.currentUser$.pipe(switchMap(x=> (
-    this.store.doc(`tickets/${ticketId}`).ref.collection("comments").add({user:x?.email, comment:newComment, timestamp: serverTimestamp()}).then(x=>{
+  let ticket = this.store.doc(`tickets/${ticketId}`).ref;
+
+  return this.auth.currentUser$.pipe(switchMap(x=> concat(
+    ticket.collection("history").add({author:x?.email, comment:newComment, timestamp: serverTimestamp()}).then(x=>{
+      x.id
+      return false;
+    }).catch(x=>{
+      return true;
+    }),
+    ticket.collection("comments").add({user:x?.email, comment:newComment, timestamp: serverTimestamp()}).then(x=>{
+      x.id
       return false;
     }).catch(x=>{
       return true;
     })
-  )))
+  )));
+
 }
 
 }

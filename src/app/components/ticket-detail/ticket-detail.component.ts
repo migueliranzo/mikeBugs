@@ -36,7 +36,8 @@ export class TicketDetailComponent implements OnInit {
   comment: any;
   editMode: boolean = false;
 
-  ticketId: any;
+  loaded: boolean = true;
+  ticketId: any; 
 
   constructor(private route: ActivatedRoute, private ticketService: TicketService, private snackBar: MatSnackBar, private overlay: Overlay) {}
 
@@ -44,14 +45,18 @@ export class TicketDetailComponent implements OnInit {
     this.ticketId = JSON.parse(this.route.snapshot.paramMap.get('filter')!);
     this.project = JSON.parse(this.route.snapshot.paramMap.get('project')!);
   
-    this.ticket$ = this.getTicket(this.ticketId);
-    this.ticket$.subscribe(x=> console.log(x))
+    this.ticket$ = this.getTicket(this.ticketId) as Observable<{
+      ticketObj: Ticket;
+      ticketHistory: any[];
+      ticketComments: any[];
+    }>;
+  
   }
 
   saveTicketChanges(ticket:Ticket){
     this.editMode = false;
 
-    const overlayRef  = this.openSpinner()
+    const overlayRef  = this.openSpinner();
 
     this.ticketService.updateTicket(ticket).subscribe(error=>{
       
@@ -60,9 +65,21 @@ export class TicketDetailComponent implements OnInit {
         overlayRef.destroy();
       }else{
         this.snackBar.open("Changes saved!", "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
-        this.ticket$ = this.getTicket(ticket.id);
+        
         overlayRef.destroy();
       }
+    })
+  }
+
+  saveComment(){
+    this.loaded = false;
+    this.ticketService.addComment(this.comment, this.ticketId).subscribe((error)=>{
+      if(error){
+        this.snackBar.open("There was an error saving your comment", "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
+      }else{
+        this.loaded = true;
+        this.comment = "";
+      }    
     })
   }
 
@@ -82,6 +99,7 @@ export class TicketDetailComponent implements OnInit {
       let h: any = today.getHours()
       let mins: any = today.getMinutes()
 
+      if (mins < 10) mins = '0' + mins;
       if (dd < 10) dd = '0' + dd;
       if (mm < 10) mm = '0' + mm;
 
@@ -92,14 +110,15 @@ export class TicketDetailComponent implements OnInit {
       return property.value;
     }
 
+    getKey(property: any){
+      return property.key;
+    }
+
     getTicket(ticketId:number){
       return this.ticketService.getTicket(ticketId);
     }
 
-    addComment(){
-      this.ticketService.addComment(this.comment, this.ticketId).subscribe(error=>{
-      })
-    }
+  
 
     openSpinner(){
       return this.overlay.create({

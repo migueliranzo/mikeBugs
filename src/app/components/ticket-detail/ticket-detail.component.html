@@ -35,7 +35,7 @@
         <div class="p-2 flex gap-4">
             <div class="flex-1 flex-grow-[2]  ">
                 <p class="border-b font-medium text-base" >Description</p>
-                <textarea [ngClass]="{'border-gray-400 ': editMode}" [(ngModel)]="ticket.description" [disabled]="!editMode" class="w-[100%]  h-[82%] border rounded p-2 bg-[#fafafa] min-h-[5rem]"> {{ticket.description}} </textarea>
+                <textarea style="resize: none ;" [ngClass]="{'border-gray-400 ': editMode}" [(ngModel)]="ticket.description" [disabled]="!editMode" class="w-[100%]  h-[82%] border rounded p-2 bg-[#fafafa] min-h-[5rem]"> {{ticket.description}} </textarea>
             </div>
             <div class="flex-1">
                 <p class="border-b font-medium text-base ">
@@ -131,30 +131,52 @@
     <div class="flex-1 border rounded ">
         <div class="bg-[#ff4081] px-2 py-1 text-white text-lg">
         <span class="flex items-center gap-2">Ticket history<mat-icon>schedule</mat-icon> </span>
-        </div>
+    </div>
+    
+        <div *ngIf="(ticket$ | async)?.ticketHistory; else spinnerTicketHistory" class="h-[51vh] overflow-y-scroll overflow-x-hidden">
+            <mat-accordion>
+                <mat-expansion-panel hideToggle *ngFor="let update of (ticket$ | async)?.ticketHistory">
 
-        <mat-accordion>
-            <mat-expansion-panel hideToggle *ngFor="let update of (ticket$ | async)?.ticketHistory">
-                <mat-expansion-panel-header>
-                <mat-panel-title>
-                {{update.author}}
-                </mat-panel-title>
-                <mat-panel-description>
-                    {{ update.timestamp ? formatDate(update.timestamp) : ""}}
-                </mat-panel-description>
-                </mat-expansion-panel-header>
-                <ng-container *ngFor="let property of update | keyvalue">
-                
-                    <div *ngIf="getValue(property).oldValue != undefined" class="flex flex-col  mb-6 mt-3">
-                    <p class="font-medium capitalize "> {{property.key}}    </p>
-                    <div class="flex gap-2">
-                        <span class="bg-green-200 px-2 py-[6px] rounded-sm" > {{ getValue(property).newValue }} </span>
-                        <span class="bg-red-200 px-2  py-[6px] rounded-sm line-through" > {{ getValue(property).oldValue }} </span>
-                    </div> 
-                    </div>
-                </ng-container>
-            </mat-expansion-panel>
-        </mat-accordion>
+                    <mat-expansion-panel-header>
+
+                        <mat-panel-title>
+                            {{update.author.substr(0,update.author.indexOf('@'))}}
+                        </mat-panel-title>
+
+                        <mat-panel-description class="flex justify-around">
+
+                            {{ update.timestamp ? formatDate(update.timestamp) : ""}}
+
+                            <mat-icon>  {{ update.comment ? "chat" : "edit"}}</mat-icon>
+
+                        </mat-panel-description>
+
+                    </mat-expansion-panel-header>
+
+                    <ng-container *ngFor="let property of update | keyvalue">
+                        <div *ngIf="getKey(property) == 'comment'">
+                            <span style="word-break: break-word;"  class="whitespace-pre-wrap" >{{getValue(property)}}</span>
+                        </div>
+                        
+                        <div *ngIf="getValue(property) && getValue(property).hasOwnProperty('oldValue')" class="flex flex-col  mb-6 mt-3">
+                                <p class="font-medium capitalize "> {{property.key}}    </p>
+                                <div class="flex gap-2">
+                                    <span class="bg-red-200 px-2  py-[6px] rounded-sm line-through " style="word-break: break-word;" > {{ getValue(property).oldValue }} </span>
+                                    <mat-icon>arrow_right_alt</mat-icon>
+                                    <span class="bg-green-200 px-2 py-[6px] rounded-sm " style="word-break: break-word;" > {{ getValue(property).newValue }} </span>
+                                </div> 
+                            </div>
+                    </ng-container>
+
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+        
+        <ng-template #spinnerTicketHistory >
+            <div class="flex justify-center h-[20vh] items-center">
+                <app-spinner></app-spinner>
+            </div>
+        </ng-template>
     
     </div>
 
@@ -164,14 +186,22 @@
     <div class="bg-[#ff4081] px-2 py-1 text-white text-lg">
         <span class="flex items-center gap-2 m-0">Ticket comments<mat-icon>chat</mat-icon> </span>
     </div>
-    <div class="flex flex-col">
+  <div *ngIf="(ticket$ | async)?.ticketComments; else spinnerCommentList">
+
+    <div class="flex flex-col" *ngIf="loaded; else spinnerNewComment">
         <mat-form-field class="w-[100%]"  appearance="fill" color="accent">
-            <textarea [(ngModel)]="comment" matInput class="w-[100%]" placeholder="Add a comment..."></textarea>
+            <textarea  [(ngModel)]="comment" matInput class="w-[100%]" placeholder="Add a comment..."></textarea>
         </mat-form-field>
         <div>
-            <button (click)="addComment()" [disabled]="!comment" style="margin-right: 20px; margin-bottom: 20px;" mat-raised-button  class="float-right" appareance="outline" >Comment</button>
+            <button (click)="saveComment()" [disabled]="!comment" style="margin-right: 20px; margin-bottom: 20px;" mat-raised-button  class="float-right" appareance="outline" >Comment</button>
         </div>
     </div>
+
+    <ng-template #spinnerNewComment >
+        <div class="flex justify-center h-[20vh] items-center">
+            <app-spinner></app-spinner>
+        </div>
+        </ng-template>
 
     <ng-container select="selector" *ngFor="let comment of (ticket$ | async)?.ticketComments">
     <div class="flex my-2 border">
@@ -180,7 +210,7 @@
             <img [src]="getProfilePic(comment.user)" height="50" width="50" class="rounded-full border bg-[#fafafa7d]" alt="profile Pic">
             <div class="flex flex-col h-[100%] pt-[5px]">
                 <span>{{comment.user.substr(0,comment.user.indexOf('@'))}}</span>
-                {{formatDate(comment.timestamp)}}
+                {{comment.timestamp ? formatDate(comment.timestamp) : ""}}
             </div>
         </div>
 
@@ -190,6 +220,14 @@
         
     </div>
     </ng-container>
+</div>
+
+    <ng-template #spinnerCommentList >
+        <div class="flex justify-center h-[20vh] items-center">
+            <app-spinner></app-spinner>
+        </div>
+    </ng-template>
+
 </div>
 
 </div>
