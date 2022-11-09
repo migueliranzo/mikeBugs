@@ -28,9 +28,11 @@ export class TicketService {
     return  combineLatest([
     this.store.doc(`tickets/${id}`).get(), 
     this.store.collection(`tickets/${id}/history`,ref=> ref.orderBy("timestamp","desc")).get(),
-  ]).pipe(map(([ticket,history]) => ({ 
+    this.store.collection(`tickets/${id}/comments`,ref=> ref.orderBy("timestamp","desc")).get()
+  ]).pipe(map(([ticket,history, comments]) => ({ 
       ticketObj: ticket.data() as Ticket, 
-      ticketHistory: history.docChanges().map(x=> x.doc.data())
+      ticketHistory: history.docChanges().map(x=> x.doc.data()),
+      ticketComments: comments.docChanges().map(x=> x.doc.data()),
   })));
   }
 
@@ -97,5 +99,16 @@ areDifferent(newTicket:Ticket, oldTicket:Ticket){
   return false;
 }
 
+addComment(newComment:string, ticketId:number){
+  console.log(newComment);
+  
+  return this.auth.currentUser$.pipe(switchMap(x=> (
+    this.store.doc(`tickets/${ticketId}`).ref.collection("comments").add({user:x?.email, comment:newComment, timestamp: serverTimestamp()}).then(x=>{
+      return false;
+    }).catch(x=>{
+      return true;
+    })
+  )))
+}
 
 }

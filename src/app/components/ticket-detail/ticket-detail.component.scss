@@ -11,3 +11,11 @@
     background-size: 200% 100%;
     animation: 1.5s shine linear infinite;
   } 
+
+  .commentText {
+    padding: 5px;
+    width: 100%;
+    min-height: 5em;
+    overflow: auto;
+    white-space: pre;
+}

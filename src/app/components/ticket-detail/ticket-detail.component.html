@@ -15,7 +15,7 @@
 
         <div class="flex flex-col items-center gap-1">
 
-        <img *ngIf="ticket.assigned != 'unassigned'; else unassigned" src="{{svg}}" alt="profilePIC" height="50" width="50" class="rounded-full border bg-[#fafafa7d]">
+        <img *ngIf="ticket.assigned != 'unassigned'; else unassigned" [src]="getProfilePic(ticket.assigned)" alt="profilePIC" height="50" width="50" class="rounded-full border bg-[#fafafa7d]">
 
         <ng-template #unassigned>
             <mat-icon class="text-5xl flex-1 items-center" style="width: auto;" [inline]="false">face</mat-icon>
@@ -165,8 +165,31 @@
         <span class="flex items-center gap-2 m-0">Ticket comments<mat-icon>chat</mat-icon> </span>
     </div>
     <div class="flex flex-col">
-    Comment
+        <mat-form-field class="w-[100%]"  appearance="fill" color="accent">
+            <textarea [(ngModel)]="comment" matInput class="w-[100%]" placeholder="Add a comment..."></textarea>
+        </mat-form-field>
+        <div>
+            <button (click)="addComment()" [disabled]="!comment" style="margin-right: 20px; margin-bottom: 20px;" mat-raised-button  class="float-right" appareance="outline" >Comment</button>
+        </div>
     </div>
+
+    <ng-container select="selector" *ngFor="let comment of (ticket$ | async)?.ticketComments">
+    <div class="flex my-2 border">
+
+        <div class="flex-1 flex flex-row items-center gap-4 p-2">
+            <img [src]="getProfilePic(comment.user)" height="50" width="50" class="rounded-full border bg-[#fafafa7d]" alt="profile Pic">
+            <div class="flex flex-col h-[100%] pt-[5px]">
+                <span>{{comment.user.substr(0,comment.user.indexOf('@'))}}</span>
+                {{formatDate(comment.timestamp)}}
+            </div>
+        </div>
+
+        <div class="flex-1 grow-[3] p-2 h-[100%] ">
+            <div class="commentText">{{comment.comment}}</div>
+        </div>
+        
+    </div>
+    </ng-container>
 </div>
 
 </div>

@@ -24,6 +24,7 @@ export class TicketDetailComponent implements OnInit {
   ticket$?: Observable<{
     ticketObj: Ticket;
     ticketHistory: any[];
+    ticketComments: any[];
   }>;
   project!: any;
 
@@ -32,27 +33,25 @@ export class TicketDetailComponent implements OnInit {
   severity: any  = environment.severityIterable;
   category : any = environment.categoriesIterable;
 
+  comment: any;
   editMode: boolean = false;
-  customIMG!: string;
 
-  svg:any;
+  ticketId: any;
 
   constructor(private route: ActivatedRoute, private ticketService: TicketService, private snackBar: MatSnackBar, private overlay: Overlay) {}
 
   ngOnInit(): void {
-    let ticketId = JSON.parse(this.route.snapshot.paramMap.get('filter')!);
+    this.ticketId = JSON.parse(this.route.snapshot.paramMap.get('filter')!);
     this.project = JSON.parse(this.route.snapshot.paramMap.get('project')!);
   
-    this.ticket$ = this.getTicket(ticketId);
+    this.ticket$ = this.getTicket(this.ticketId);
+    this.ticket$.subscribe(x=> console.log(x))
   }
 
   saveTicketChanges(ticket:Ticket){
     this.editMode = false;
 
-    const overlayRef  = this.overlay.create({
-      positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically(),
-      hasBackdrop: true,
-    }).attach(new ComponentPortal(SpinnerComponent));
+    const overlayRef  = this.openSpinner()
 
     this.ticketService.updateTicket(ticket).subscribe(error=>{
       
@@ -67,9 +66,9 @@ export class TicketDetailComponent implements OnInit {
     })
   }
 
-  setProfilePic(assigned:string){
-      this.svg = createAvatar(style, {
-        seed: assigned,
+    getProfilePic(seed:string){
+      return createAvatar(style, {
+        seed: seed,
         dataUri: true
       });
     }
@@ -94,11 +93,19 @@ export class TicketDetailComponent implements OnInit {
     }
 
     getTicket(ticketId:number){
-      return this.ticketService.getTicket(ticketId).pipe(tap(x=>{
-        
-        this.setProfilePic(x.ticketObj.assigned);
-        
-      }));
+      return this.ticketService.getTicket(ticketId);
+    }
+
+    addComment(){
+      this.ticketService.addComment(this.comment, this.ticketId).subscribe(error=>{
+      })
+    }
+
+    openSpinner(){
+      return this.overlay.create({
+        positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically(),
+        hasBackdrop: true,
+      }).attach(new ComponentPortal(SpinnerComponent));
     }
     
 }
