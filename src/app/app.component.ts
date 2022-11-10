@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
+import { AuthService } from './common/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -11,18 +12,24 @@ export class AppComponent {
   links = [
     {name: "Dashboard", url: '/dashboard', icon: "dashboard" },
     {name: "Tickets", url: '/ticket-list', icon: "receipt_long"},
-    {name: "Manage projects", url: '/project-management', icon: "edit_document"},
+    {name: "Projects", url: '/project-management', icon: "edit_document"},
   ]
 
-  loginPage: boolean = false;
+  showTop: boolean = false;
+  showLeft: boolean = false;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, public auth: AuthService) {
       router.events.forEach((event) => {
         if (event instanceof NavigationStart) {
           if (event['url'] == '/login') {
-            this.loginPage = false;
-          } else {
-            this.loginPage = true;
+            this.showTop = false;
+            this.showLeft = false;
+          } else if (event['url'].includes('/user-profile') ) {
+            this.showLeft = false;
+            this.showTop = true;
+          }else{
+            this.showTop = true;
+            this.showLeft = true;
           }
         }
       });

@@ -1,0 +1,17 @@
+.mainContainer{
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+    display: block;
+    overflow: hidden;
+    flex: 1;
+    height: 100%;
+}
+
+.sideBar{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 200px;
+    padding-top: 10px;
+}

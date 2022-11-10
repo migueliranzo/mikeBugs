@@ -42,6 +42,9 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {MatExpansionModule} from '@angular/material/expansion';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { InvitationsComponent } from './components/user-profile/invitations/invitations.component';
+import { SettingsComponent } from './components/user-profile/settings/settings.component';
 
 
 @NgModule({
@@ -55,7 +58,10 @@ import {MatExpansionModule} from '@angular/material/expansion';
     ProjectDialogComponent,
     TicketDialogComponent,
     LoginComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    UserProfileComponent,
+    InvitationsComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,

@@ -1,13 +1,5 @@
-
-<mat-toolbar color="primary" *ngIf="showTop">
-  <div class="flex w-[100%] justify-between">
-    <span>MKBugs</span>
-    <button mat-icon-button [routerLink]="(auth.currentUser$ | async)?.email ? '/user-profile' : '/login' " > <mat-icon>account_circle</mat-icon> </button>
-  </div>
-</mat-toolbar>
-
 <mat-sidenav-container  class="mainContainer">
-    <mat-sidenav  class="sideBar" mode="side" [opened]="showLeft">
+    <mat-sidenav  class="sideBar" opened="true" mode="side">
       <nav>
         <a class="items-center" mat-button style="display: flex;" *ngFor="let link of links" 
         [routerLink]="link.url" routerLinkActive="text-[#ff4182]"> 
