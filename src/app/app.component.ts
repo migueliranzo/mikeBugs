@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { AuthService } from './common/services/auth.service';
 
 @Component({
@@ -7,7 +8,7 @@ import { AuthService } from './common/services/auth.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   title = 'mikeBugs';
   links = [
     {name: "Dashboard", url: '/dashboard', icon: "dashboard" },
@@ -17,6 +18,8 @@ export class AppComponent {
 
   showTop: boolean = false;
   showLeft: boolean = false;
+
+  invites$: Observable<any[]> | null = null;
 
   constructor(private router: Router, public auth: AuthService) {
       router.events.forEach((event) => {
@@ -33,6 +36,26 @@ export class AppComponent {
           }
         }
       });
+      
+    }
+  ngOnInit(): void {
+    
+    if(this.auth.currentUser$){
+      this.auth.currentUser$.subscribe( x=>
+        this.invites$ =  this.auth.getUserInvitations()
+      )
+    }
+  }
+
+  acceptInvite(invite: any){
+
+    this.auth.acceptProjectInvite(invite);
+  }
+
+    logOut(){
+      console.log("exit");
+      this.router.navigateByUrl("/login")
+      this.auth.logout();
     }
 
 }

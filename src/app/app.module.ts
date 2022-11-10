@@ -42,9 +42,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {MatExpansionModule} from '@angular/material/expansion';
-import { UserProfileComponent } from './components/user-profile/user-profile.component';
-import { InvitationsComponent } from './components/user-profile/invitations/invitations.component';
-import { SettingsComponent } from './components/user-profile/settings/settings.component';
+import {MatBadgeModule} from '@angular/material/badge';
+import {MatMenuModule} from '@angular/material/menu';
 
 
 @NgModule({
@@ -59,9 +58,6 @@ import { SettingsComponent } from './components/user-profile/settings/settings.c
     TicketDialogComponent,
     LoginComponent,
     SpinnerComponent,
-    UserProfileComponent,
-    InvitationsComponent,
-    SettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -73,12 +69,14 @@ import { SettingsComponent } from './components/user-profile/settings/settings.c
     MatNativeDateModule,
     OverlayModule,
     MatDatepickerModule,
+    MatMenuModule,
     MatExpansionModule,
     FormsModule,
     MatPaginatorModule,
     MatDialogModule,
     ReactiveFormsModule,
     MatSortModule,
+    MatBadgeModule,
     MatInputModule,
     MatCardModule,
     MatFormFieldModule,

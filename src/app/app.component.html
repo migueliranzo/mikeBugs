@@ -2,7 +2,32 @@
 <mat-toolbar color="primary" *ngIf="showTop">
   <div class="flex w-[100%] justify-between">
     <span>MKBugs</span>
-    <button mat-icon-button [routerLink]="(auth.currentUser$ | async)?.email ? '/user-profile' : '/login' " > <mat-icon>account_circle</mat-icon> </button>
+    <button *ngIf="!(auth.currentUser$ | async); else logged" mat-icon-button routerLink="/login" > <mat-icon>account_circle</mat-icon> </button>
+    <ng-template #logged>
+      <div class="flex items-center gap-8">
+        <div class="flex items-center gap-2">
+          {{(auth.currentUser$ | async)?.email}}
+          <mat-icon  [matBadge]="(invites$ | async)?.length" [matBadgeHidden]="((invites$ | async)?.length == 0)"  matBadgeColor="warn" [matMenuTriggerFor]="menu" >mail</mat-icon>
+
+          <mat-menu #menu="matMenu">
+
+            <p class="p-3 border-b">Project invites</p>
+
+            <div *ngFor="let invite of (invites$ | async) as invites" class="p-3">
+              <span class="flex items-center gap-2 justify-between">
+                {{invite.projectName}}
+              <button (click)="acceptInvite(invite)" mat-raised-button color="accent">Accept</button>
+              </span>
+            </div>
+
+            <p *ngIf="((invites$ | async)?.length == 0)" class="p-3">You have no invites pending</p>
+
+          </mat-menu>
+
+        </div>
+        <mat-icon (click)="logOut()" >logout</mat-icon>
+      </div>
+      </ng-template>
   </div>
 </mat-toolbar>
 

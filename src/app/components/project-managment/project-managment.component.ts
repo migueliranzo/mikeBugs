@@ -8,6 +8,7 @@ import { serverTimestamp } from '@angular/fire/firestore';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjectDialogComponent } from './project-dialog/project-dialog.component';
 import { AuthService } from 'src/app/common/services/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-project-managment',
@@ -19,7 +20,7 @@ export class ProjectManagmentComponent implements OnInit {
   selectedProject: any;
   currentUser: any ;
 
-  constructor(private projectService:ProjectService, private store: AngularFirestore, public matDialog: MatDialog, public authService: AuthService) {}
+  constructor(private projectService:ProjectService, private store: AngularFirestore, public matDialog: MatDialog, public authService: AuthService, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
 
@@ -34,7 +35,16 @@ export class ProjectManagmentComponent implements OnInit {
   }
 
   sendEmail(email:any){
-  this.projectService.sendInvitation(email);
+    
+    
+    this.projectService.sendInvitation(email).subscribe(response=>{
+      if(response.error){
+        this.snackBar.open(response.code, "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
+      }else{
+        this.snackBar.open(response.code, "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
+      }
+      
+    });
   }
 
   openDialog(){

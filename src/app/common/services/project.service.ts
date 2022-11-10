@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection  } from '@angular/fire/compat/firestore';
+import { iif } from 'rxjs';
 import { from } from 'rxjs/internal/observable/from';
 import { of } from 'rxjs/internal/observable/of';
 import { every, first, map, switchMap, tap } from 'rxjs/operators';
@@ -50,8 +51,21 @@ export class ProjectService {
     }));
   }
 
-  sendInvitation(invitation:string){
-    this.store.collection("invitations").add(invitation)
+  sendInvitation(invitation:any){
+
+    return this.store.collection("invitations",x=> x.where("email","==",invitation.email).where("projectId", "==", invitation.projectId)).valueChanges().pipe(first(), switchMap((x:any)=>(
+        iif(
+          () => x.length == 0,
+          from(
+            this.store.collection("invitations").add(invitation).then(x=>{
+              this.store.collection("invitations").doc(x.id).update({id:x.id});
+              return {error: false, code: "Invitation sent!"};
+            }).catch(x=> {
+              return {error: true, code: x};
+            })),
+          of({error: true, code: "User is already invited"}))
+    )))
+
   }
 
 

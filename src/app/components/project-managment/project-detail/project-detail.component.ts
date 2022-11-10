@@ -3,7 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Project } from 'src/app/common/models/project';
 import { MatDialog } from '@angular/material/dialog';
-import { FormControl, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { environment } from 'src/environments/environment';
 @Component({
@@ -11,13 +11,13 @@ import { environment } from 'src/environments/environment';
   templateUrl: './project-detail.component.html',
   styleUrls: ['./project-detail.component.scss']
 })
-export class ProjectDetailComponent implements OnInit {
+export class ProjectDetailComponent {
   displayedColumns: string[] = [];
   roles?: any[] = environment.roles;
   viewMode: boolean = true;
   currentProject: { id: string; title: string; subtitle: string; description: string; tickets: any; users: any; } | undefined;
 
-
+  @Input() currentUser: any;
   @Input() set selectedProject(project:Project){
     if(!project) return;
     this.viewMode = true;
@@ -28,14 +28,12 @@ export class ProjectDetailComponent implements OnInit {
 
   @Output() sendEmail:EventEmitter<any> = new EventEmitter();
 
-  emailFormControl = new FormControl('', [Validators.required, Validators.email]);
+  emailFormControl = new FormControl('', [Validators.required, Validators.email, this.alreadyInvited()]);
   matcher = new ErrorStateMatcher();
 
 
-  constructor(private router:Router, public matDialog: MatDialog) { }
+  constructor(private router:Router, public matDialog: MatDialog) {  }
 
-  ngOnInit(): void {
-  }
 
   editMode(){
     this.viewMode = !this.viewMode;
@@ -55,12 +53,34 @@ export class ProjectDetailComponent implements OnInit {
 
   }
 
-  saveChanges(){
-
-  }
-
   goToProjectView(){
     this.router.navigate(["/ticket-list", { filter: this.currentProject?.id }])
   }
+
+  alreadyInvited(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if(this.checkIfMember(this.currentProject?.users, control.value)){
+        
+        return null;
+      }else{
+        return {mailmatch: {value: control.value}};
+      }
+    };
+  }
+
+  checkIfMember(users: any[any], mail:string){
+    if(users == undefined){
+      return false;
+    };
+    for (const user of users) {
+      if(user.email === mail ){
+        console.log(user.email, mail, "repeat");
+        
+        return false
+      }
+    }
+    return true;
+  }
+
 
 }
