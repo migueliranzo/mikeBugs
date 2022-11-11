@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { first, map, Observable } from 'rxjs';
+import { first, map, Observable, take, takeLast, takeUntil, takeWhile, toArray } from 'rxjs';
 import { Project } from 'src/app/common/models/project';
 import { ProjectService } from 'src/app/common/services/project.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
@@ -16,7 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./project-managment.component.scss'],
 })
 export class ProjectManagmentComponent implements OnInit {
-  projects$!: Observable<unknown[]>;
+  projects$!: Observable<any>;
   selectedProject: any;
   currentUser: any ;
 
@@ -35,8 +35,6 @@ export class ProjectManagmentComponent implements OnInit {
   }
 
   sendEmail(email:any){
-    
-    
     this.projectService.sendInvitation(email).subscribe(response=>{
       if(response.error){
         this.snackBar.open(response.code, "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
@@ -45,6 +43,10 @@ export class ProjectManagmentComponent implements OnInit {
       }
       
     });
+  }
+
+  editUsers(update: any){
+    this.projectService.updateUsers(update);
   }
 
   openDialog(){

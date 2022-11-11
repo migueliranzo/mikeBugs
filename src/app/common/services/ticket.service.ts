@@ -92,7 +92,6 @@ areDifferent(newTicket:Ticket, oldTicket:Ticket){
 
   for (const property in newTicket) {
     if((newTicket[property as keyof Ticket] != oldTicket[property as keyof Ticket]) && !(property == "creationDate" || property == "lastUpdateChange")){
-
       return true;
     }
   }

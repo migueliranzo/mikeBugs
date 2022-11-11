@@ -55,7 +55,7 @@ export class AuthService {
   acceptProjectInvite(invite:any){
     
     this.store.collection("invitations").doc(invite.id).delete().then(x=>{
-      this.store.collection("user-project").add({email: invite.email, projectId: invite.projectId, role: 0, uid:  this.auth.currentUser?.uid })
+      this.store.collection("user-project").add({email: invite.email, projectId: invite.projectId, role: 4, uid:  this.auth.currentUser?.uid })
     })
 
   }

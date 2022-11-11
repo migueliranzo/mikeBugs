@@ -11,22 +11,29 @@ import { environment } from 'src/environments/environment';
   templateUrl: './project-detail.component.html',
   styleUrls: ['./project-detail.component.scss']
 })
+
+
+
 export class ProjectDetailComponent {
   displayedColumns: string[] = [];
   roles?: any[] = environment.roles;
   viewMode: boolean = true;
   currentProject: { id: string; title: string; subtitle: string; description: string; tickets: any; users: any; } | undefined;
 
+  changes: {[key: string]: any} = {updates: {}};
+
+  
   @Input() currentUser: any;
   @Input() set selectedProject(project:Project){
     if(!project) return;
     this.viewMode = true;
     this.displayedColumns = ['name', 'role'];
     this.currentProject = {...project, users: [...project.users]};
-    
+    this.changes = {...this.changes, projectId: project.id}
   }
 
   @Output() sendEmail:EventEmitter<any> = new EventEmitter();
+  @Output() editUsers: EventEmitter<any> = new EventEmitter();
 
   emailFormControl = new FormControl('', [Validators.required, Validators.email, this.alreadyInvited()]);
   matcher = new ErrorStateMatcher();
@@ -49,8 +56,28 @@ export class ProjectDetailComponent {
     this.matDialog.open(ref);
   }
 
-  removeMember(){
+  removeMember(event:any, user:any){
+    this.addPropery(user, event.checked, "cheked");
+  }
 
+  changeRole(value:any, user:any){
+    this.addPropery(user, value, "role")
+  }
+
+  addPropery( user:any, property: string, keyName:string){
+    if(this.changes["updates"].hasOwnProperty(user.email)){
+      if(this.changes["updates"][user.email].hasOwnProperty(property)){
+        this.changes["updates"][user.email][keyName] =  property; 
+      }else{
+        this.changes["updates"][user.email] = { ...this.changes["updates"][user.email] ,[keyName]: property};
+      }
+    }else{
+      this.changes["updates"][user.email] = { ...this.changes["updates"][user.email] ,[keyName]: property};
+    }
+  }
+
+  saveChanges(){ 
+    this.editUsers.emit(this.changes)
   }
 
   goToProjectView(){
@@ -74,8 +101,6 @@ export class ProjectDetailComponent {
     };
     for (const user of users) {
       if(user.email === mail ){
-        console.log(user.email, mail, "repeat");
-        
         return false
       }
     }

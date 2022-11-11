@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection  } from '@angular/fire/compat/firestore';
-import { iif } from 'rxjs';
+import { forkJoin, iif, merge } from 'rxjs';
 import { from } from 'rxjs/internal/observable/from';
 import { of } from 'rxjs/internal/observable/of';
-import { every, first, map, switchMap, tap } from 'rxjs/operators';
+import { combineLatest, map, combineAll, combineLatestAll } from 'rxjs';
+import {  combineLatestWith, concatMap, every, first, flatMap, last, mergeMap, retry, switchMap, tap, toArray } from 'rxjs/operators';
 import { Project } from '../models/project';
 
 @Injectable({
@@ -26,7 +27,7 @@ export class ProjectService {
   getUserProjects(id:string){
   let projects:any[] = [];
 
-  this.store.collection("user-project", ref=> ref.where("uid", "==", id)).get().forEach(x=> {
+    this.store.collection("user-project", ref=> ref.where("uid", "==", id).where("role", "==", 3)).get().forEach(x=> {
 
     for (const element of x.docs.values()) {
 
@@ -68,5 +69,17 @@ export class ProjectService {
 
   }
 
+  updateUsers(updateObject:any){
+    let projectId = updateObject.projectId;
+    for (const user in updateObject.updates) {
+      this.store.collection("user-project", x=> x.where("projectId", "==", projectId).where("email","==",user)).get().forEach(x=>{
+        if(updateObject.updates[user].hasOwnProperty("cheked") && updateObject.updates[user].cheked){
+          x.docs[0].ref.delete();
+        }else{
+          x.docs[0].ref.update({role:updateObject.updates[user].role})
+        }
+      })
+  }
 
+}
 }

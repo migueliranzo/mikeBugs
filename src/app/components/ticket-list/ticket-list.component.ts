@@ -134,7 +134,6 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
       this.router.navigate(["/ticket-detail", { filter: JSON.stringify(ticket.id), project: JSON.stringify(x)}])
     });
     
-  
   }
 
   dateIsOnRange(check: Date, to:Date, from:Date){

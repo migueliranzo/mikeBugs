@@ -44,6 +44,7 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 
 @NgModule({
@@ -72,6 +73,7 @@ import {MatMenuModule} from '@angular/material/menu';
     MatMenuModule,
     MatExpansionModule,
     FormsModule,
+    MatCheckboxModule,
     MatPaginatorModule,
     MatDialogModule,
     ReactiveFormsModule,
