@@ -29,12 +29,12 @@ export class LoginComponent implements OnInit {
   submit(){
 
     if(this.isSigning){
-      this.authService.createAccount(this.emailFormControl.value as string, this.passwordFormControl.value as string).subscribe(x=>{
-        x ? this.invalidCredentials = true : this.router.navigateByUrl("project-management");
+      this.authService.createAccount(this.emailFormControl.value as string, this.passwordFormControl.value as string).subscribe(error=>{
+        error ? this.invalidCredentials = true : this.router.navigateByUrl("project-management");
       });
     }else{
-      this.authService.login(this.emailFormControl.value as string,this.passwordFormControl.value as string).subscribe(x=> {
-        x ? this.invalidCredentials = true : this.router.navigateByUrl("project-management");
+      this.authService.login(this.emailFormControl.value as string,this.passwordFormControl.value as string).subscribe(error=> {
+        error ? this.invalidCredentials = true : this.router.navigateByUrl("project-management");
       });
     }
   }

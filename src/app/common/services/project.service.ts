@@ -4,7 +4,7 @@ import { forkJoin, iif, merge } from 'rxjs';
 import { from } from 'rxjs/internal/observable/from';
 import { of } from 'rxjs/internal/observable/of';
 import { combineLatest, map, combineAll, combineLatestAll } from 'rxjs';
-import {  combineLatestWith, concatMap, every, first, flatMap, last, mergeMap, retry, switchMap, tap, toArray } from 'rxjs/operators';
+import {  combineLatestWith, concatMap, every, first, flatMap, last, mergeMap, retry, scan, switchMap, tap, toArray } from 'rxjs/operators';
 import { Project } from '../models/project';
 
 @Injectable({
@@ -27,12 +27,34 @@ export class ProjectService {
   getUserProjects(id:string){
   let projects:any[] = [];
 
+  /*
+    After two sessions of trying to get this stream to work, I have gotten very close, and I have learned a lot about rxjs, sadly I have not managed 
+    to emit all the values altogether the way I want, it's like I can't section the stream, I keep emitting projects without collecting and ordering them.
+
+    I have to keep moving for now, but the rxjs pro future me will come back and make this stream a reality!
+
+    this.store.collection("user-project", ref=> ref.where("uid", "==", id)).valueChanges().pipe(mergeMap(x=> x),mergeMap((x:any)=>  {
+
+    return combineLatest([
+      this.store.collection("projects").doc(x.projectId).valueChanges(),
+      this.store.collection("user-project", ref=> ref.where("projectId","==",x.projectId)).get().pipe(map(x=> x.docs.map(x=> x.data())))
+    ]).pipe(map( ([project, users] ) =>({ 
+        project: project,
+        users: users
+    } )) )
+    })
+    ).subscribe(x=> console.log(x)
+    )
+    **/
+    
+
     this.store.collection("user-project", ref=> ref.where("uid", "==", id).where("role", "==", 3)).get().forEach(x=> {
 
     for (const element of x.docs.values()) {
 
       this.store.collection("user-project", ref=> ref.where("projectId","==",element.get("projectId"))).valueChanges().pipe(first()).subscribe(users=> {
-
+        console.log(users);
+        
         this.store.collection("projects").doc(element.get("projectId")).valueChanges().pipe(first()).subscribe((x:any)=> x != undefined? projects.push({...x, users: users}) : null);
       } );
       }
