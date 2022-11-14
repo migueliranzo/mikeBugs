@@ -16,11 +16,9 @@
             </mat-card-actions>
           </mat-card>
     
-
-    
         <mat-card class="example-card">
             <mat-card-content>
-              <table mat-table [dataSource]="currentProject.users" class="w-[100%]">
+              <table mat-table [dataSource]="dataSource" #table class="w-[100%]">
 
                 <ng-container matColumnDef="name">
                   <th mat-header-cell *matHeaderCellDef> Email </th>

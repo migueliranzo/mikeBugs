@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection  } from '@angular/fire/compat/firestore';
-import { forkJoin, iif, merge } from 'rxjs';
+import { forkJoin, iif, merge, Observable } from 'rxjs';
 import { from } from 'rxjs/internal/observable/from';
 import { of } from 'rxjs/internal/observable/of';
-import { combineLatest, map, combineAll, combineLatestAll } from 'rxjs';
-import {  combineLatestWith, concatMap, every, first, flatMap, last, mergeMap, retry, scan, switchMap, tap, toArray } from 'rxjs/operators';
+import { combineLatest, map, combineAll, combineLatestAll, switchMap } from 'rxjs';
+import {  combineLatestWith, concatAll, concatMap, every, first, flatMap, last, mergeAll, mergeMap, retry, scan, tap, toArray } from 'rxjs/operators';
 import { Project } from '../models/project';
 
 @Injectable({
@@ -25,42 +25,15 @@ export class ProjectService {
   }
 
   getUserProjects(id:string){
-  let projects:any[] = [];
 
-  /*
-    After two sessions of trying to get this stream to work, I have gotten very close, and I have learned a lot about rxjs, sadly I have not managed 
-    to emit all the values altogether the way I want, it's like I can't section the stream, I keep emitting projects without collecting and ordering them.
-
-    I have to keep moving for now, but the rxjs pro future me will come back and make this stream a reality!
-
-    this.store.collection("user-project", ref=> ref.where("uid", "==", id)).valueChanges().pipe(mergeMap(x=> x),mergeMap((x:any)=>  {
-
-    return combineLatest([
-      this.store.collection("projects").doc(x.projectId).valueChanges(),
-      this.store.collection("user-project", ref=> ref.where("projectId","==",x.projectId)).get().pipe(map(x=> x.docs.map(x=> x.data())))
-    ]).pipe(map( ([project, users] ) =>({ 
-        project: project,
-        users: users
-    } )) )
-    })
-    ).subscribe(x=> console.log(x)
-    )
-    **/
-    
-
-    this.store.collection("user-project", ref=> ref.where("uid", "==", id).where("role", "==", 3)).get().forEach(x=> {
-
-    for (const element of x.docs.values()) {
-
-      this.store.collection("user-project", ref=> ref.where("projectId","==",element.get("projectId"))).valueChanges().pipe(first()).subscribe(users=> {
-        console.log(users);
-        
-        this.store.collection("projects").doc(element.get("projectId")).valueChanges().pipe(first()).subscribe((x:any)=> x != undefined? projects.push({...x, users: users}) : null);
-      } );
-      }
-    });
-
-    return of(projects);
+  return this.store.collection("user-project", ref=> ref.where("uid", "==", id).where("role", "==", 3)).valueChanges().pipe(
+      map((x:any)=> x = x.map((x:any)=> combineLatest([ 
+        this.store.collection("projects",ref=> ref.where("id","==",x.projectId)).valueChanges(),
+        this.store.collection("user-project",ref=> ref.where("projectId","==",x.projectId)).valueChanges()]))),
+        switchMap((x:Observable<any>[]) => combineLatest(x)),
+        map(x=> x.map( (x:any)=> ({...x[0][0], users: x[1]}) ))
+      
+      )
   }
 
   saveProject(project: any, owner: any) {

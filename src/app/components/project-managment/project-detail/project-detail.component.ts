@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Project } from 'src/app/common/models/project';
 import { MatDialog } from '@angular/material/dialog';
@@ -23,13 +23,17 @@ export class ProjectDetailComponent {
   changes: {[key: string]: any} = {updates: {}};
 
   
+  dataSource!: MatTableDataSource<any>;
+
   @Input() currentUser: any;
   @Input() set selectedProject(project:Project){
     if(!project) return;
+    
     this.viewMode = true;
     this.displayedColumns = ['name', 'role'];
-    this.currentProject = {...project, users: [...project.users]};
+    this.currentProject = project;
     this.changes = {...this.changes, projectId: project.id}
+    this.dataSource = new MatTableDataSource(project.users)
   }
 
   @Output() sendEmail:EventEmitter<any> = new EventEmitter();

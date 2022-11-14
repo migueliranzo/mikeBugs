@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { first, map, Observable, take, takeLast, takeUntil, takeWhile, toArray } from 'rxjs';
+import { first, from, last, map, Observable, take, takeLast, takeUntil, takeWhile, tap, toArray } from 'rxjs';
 import { Project } from 'src/app/common/models/project';
 import { ProjectService } from 'src/app/common/services/project.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
@@ -19,7 +19,6 @@ export class ProjectManagmentComponent implements OnInit {
   projects$!: Observable<any>;
   selectedProject: any;
   currentUser: any ;
-
   constructor(private projectService:ProjectService, private store: AngularFirestore, public matDialog: MatDialog, public authService: AuthService, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
@@ -47,6 +46,14 @@ export class ProjectManagmentComponent implements OnInit {
 
   editUsers(update: any){
     this.projectService.updateUsers(update);
+
+    this.authService.currentUser$.subscribe(x=> {
+      this.projects$ = this.projectService.getUserProjects(x!.uid).pipe(tap(x=>{
+        
+        this.selectedProject = x.find(x=> x.id == this.selectedProject.id);
+      }));
+    })
+    
   }
 
   openDialog(){
