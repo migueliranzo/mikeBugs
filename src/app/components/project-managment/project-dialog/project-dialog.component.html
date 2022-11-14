@@ -1,25 +1,34 @@
-<h1 mat-dialog-title>Create new project</h1>
+<h1 *ngIf="project == undefined; else edit" mat-dialog-title>Create new project</h1>
+<ng-template #edit> <h1 mat-dialog-title>Edit project</h1>  </ng-template>
 <form class="example-form" [formGroup]="editedProject">
 <div mat-dialog-content class="flex-col min-w-[25rem]" style="display: flex;">
     
         <mat-form-field class="example-full-width" appearance="outline">
           <mat-label>Project name</mat-label>
           <input matInput formControlName="title">
+          <mat-error *ngIf="editedProject.get('title')?.hasError('minlength') && !editedProject.get('title')?.hasError('required')">
+            The title must be atleast 3 characters
+        </mat-error>
         </mat-form-field>
 
         <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Project Subtitle</mat-label>
             <input matInput formControlName="subtitle">
+            <mat-error *ngIf="editedProject.get('subtitle')?.hasError('minlength') && !editedProject.get('title')?.hasError('required')">
+              The subtitle must be atleast 6 characters
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Project description</mat-label>
             <textarea class="min-h-[7rem]" matInput formControlName="description" ></textarea>
+            <mat-error *ngIf="editedProject.get('description')?.hasError('minlength') && !editedProject.get('title')?.hasError('required')">
+              The description must be atleast 12 characters
+          </mat-error>
         </mat-form-field>
-   
 </div>
 </form>
 <div mat-dialog-actions class="float-right">
   <button mat-button mat-dialog-close>Close</button>
-  <button mat-raised-button color="accent" (click)="saveProject()" mat-dialog-close>Save</button>
+  <button mat-raised-button color="accent" (click)="saveProject()" [disabled]="!editedProject.valid" mat-dialog-close>Save</button>
 </div>

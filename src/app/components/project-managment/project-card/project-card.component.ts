@@ -1,6 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Project } from 'src/app/common/models/project';
 
 @Component({
   selector: 'app-project-card',
@@ -11,6 +9,7 @@ export class ProjectCardComponent implements OnInit {
 
   @Input() projects:  any;
   @Output() openProject: EventEmitter<any> = new EventEmitter();
+  @Output() editedProject: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 
@@ -27,6 +26,11 @@ export class ProjectCardComponent implements OnInit {
       4: `${devs[0]?.email}, ${devs[1]?.email} and ${devs.length - 2 } others are working on this`,
     }[Math.min(4, devs.length)]; 
   }
+
+  editProject(x:any){
+    this.editedProject.emit(x)
+  }
+  
 
   getCompletionProgress(tickets:[]):number{
     if(tickets == undefined) return 0;

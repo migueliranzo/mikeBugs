@@ -27,7 +27,7 @@ export class ProjectManagmentComponent implements OnInit {
     this.authService.currentUser$.pipe(first()).subscribe(x=> {
     this.currentUser = x;
     this.projects$ = this.projectService.getUserProjects(x!.uid);
-   
+  
   });
   }
 
@@ -48,10 +48,9 @@ export class ProjectManagmentComponent implements OnInit {
 
   editUsers(update: any){
     this.projectService.updateUsers(update);
-
     this.authService.currentUser$.subscribe(x=> {
       this.projects$ = this.projectService.getUserProjects(x!.uid).pipe(tap((x:any)=>{
-        if(!x){
+        if(x){
           this.selectedProject = x.find((x:any)=> x.id == this.selectedProject.id);
         }else{
           this.selectedProject = null;
@@ -61,11 +60,30 @@ export class ProjectManagmentComponent implements OnInit {
     
   }
 
-  openDialog(){
+  editProject(project: any){
+    this.openDialog(project);
+  }
+
+  openDialog(project?: any){
     let dialogInstance = this.matDialog.open(ProjectDialogComponent); 
-    dialogInstance.componentInstance.modifiedProject.subscribe(x=> {
-    this.projectService.saveProject(x, this.currentUser).subscribe(x=> 
-        this.projects$ = this.projectService.getUserProjects(this.currentUser.uid));
+    dialogInstance.componentInstance.inputProject = project;
+    dialogInstance.componentInstance.modifiedProject.subscribe((x:any)=> {
+      this.projectService.saveProject(x.value, this.currentUser, x.editMode).subscribe(response=>{
+
+        if(response.error){
+          this.snackBar.open(response.code, "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
+        }else{
+          this.projects$ = this.projectService.getUserProjects(this.currentUser.uid).pipe(tap((x:any)=>{
+            if(x){
+              this.selectedProject = x.find((x:any)=> x.id == this.selectedProject.id);
+            }else{
+              this.selectedProject = null;
+            }
+          }));
+          this.snackBar.open(response.code, "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
+        }
+        
+        });
     });
   }
 

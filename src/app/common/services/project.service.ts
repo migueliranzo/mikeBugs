@@ -42,26 +42,31 @@ export class ProjectService {
       }
   }))
     
-
-  return this.store.collection("user-project", ref=> ref.where("uid", "==", id).where("role", "==", 3)).valueChanges().pipe(
-      map((x:any)=> x = x.map((x:any)=> combineLatest([ 
-        this.store.collection("projects",ref=> ref.where("id","==",x.projectId)).valueChanges(),
-        this.store.collection("user-project",ref=> ref.where("projectId","==",x.projectId)).valueChanges()]))),
-        switchMap((x:Observable<any>[]) => combineLatest(x)),
-        map(x=> x.map( (x:any)=> ({...x[0][0], users: x[1]}) ))
-      
-      )
   }
 
-  saveProject(project: any, owner: any) {
+  saveProject(project: any, owner: any, editMode: boolean) {
+    
     let uid = owner.uid;
     let email = owner.email;
+    if(editMode){
+
+      return from(this.store.doc("projects/" + project.id).update(project).then(x=>{
+        return {error: false, code: "Project updated!"};
+      }).catch(x=> {
+        return {error: true, code: "There was a problem updating the project"};
+      }));
+
+    }else{
     
     return from(this.store.collection("projects").add(project).then(x=> {
       this.store.collection("projects").doc(x.id).update({id:x.id});
       this.store.collection("user-project").add({uid:uid, email:email, role:3, projectId:x.id});
-      
+      return {error: false, code: "Project created!"};
+    }).catch(x=>{
+      return {error: true, code: "There was a problem creating the project"};
     }));
+
+  }
   }
 
   sendInvitation(invitation:any){

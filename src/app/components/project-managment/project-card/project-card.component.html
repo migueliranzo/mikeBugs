@@ -15,9 +15,7 @@
       </mat-card-content>
       
       <mat-card-actions>
-          <button color="accent" mat-button>EDIT</button>
-        
-          
+          <button color="accent" (click)="editProject(project); $event.stopImmediatePropagation()" mat-button>EDIT</button>
       </mat-card-actions>
     
     </mat-card>
