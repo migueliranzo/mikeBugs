@@ -6,11 +6,18 @@
         <div class="bg-[#ff4081] px-2 py-1 text-white text-lg">
         {{project.title}} {{category[ticket.category].viewValue}} details
         </div>
-        <div class="bg-[#f7f7f7] p-2  flex justify-between">
+        <div class="bg-[#f7f7f7] p-2  flex justify-between bg-gradient-to-br"  [ngClass]="{
+            'from-green-200 ': ticket.status === 0,
+            'from-blue-200 ': ticket.status === 1,
+            'from-orange-200 ': ticket.status === 2,
+            'from-red-200 ': ticket.status === 3,
+            'from-gray-200 ': ticket.status === 4
+        }">
 
         <div class="text-xl w-[100%]"> 
             <p class="flex items-center underline"> {{ category[ticket.category].viewValue }} {{ticket.tId}}  </p>
-            <input [(ngModel)]="ticket.name" [ngClass]="{'border border-gray-400 rounded': editMode,'border-red-500':ticket.name.length == 0}" class=" text-ellipsis w-[90%] bg-[#f7f7f7] " [disabled]="!editMode" [value]="ticket.name">
+            <input [(ngModel)]="ticket.name" [ngClass]="{'border border-gray-400 rounded': editMode,'border-red-500':ticket.name.length == 0}" class=" text-ellipsis w-[90%]" style="background: none;" [disabled]="!editMode" [value]="ticket.name">
+            <p class="text-xs">Created {{formatDate(ticket.creationDate)}}</p>
         </div>
 
         <div class="flex flex-col items-center gap-1">
