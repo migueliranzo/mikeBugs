@@ -26,6 +26,23 @@ export class ProjectService {
 
   getUserProjects(id:string){
 
+  return this.store.collection("user-project", ref=> ref.where("uid", "==", id).where("role", "==", 3)).valueChanges().pipe(switchMap((x:any)=> {
+
+      if(x.length != 0){
+        return this.store.collection("user-project", ref=> ref.where("uid", "==", id).where("role", "==", 3)).valueChanges().pipe(
+          map((x:any)=> x = x.map((x:any)=> combineLatest([ 
+            this.store.collection("projects",ref=> ref.where("id","==",x.projectId)).valueChanges(),
+            this.store.collection("user-project",ref=> ref.where("projectId","==",x.projectId)).valueChanges()]))),
+            switchMap((x:Observable<any>[]) => combineLatest(x)),
+            map(x=> x.map( (x:any)=> ({...x[0][0], users: x[1]}) ))
+          
+          )
+      }else{
+        return of("0proyects")
+      }
+  }))
+    
+
   return this.store.collection("user-project", ref=> ref.where("uid", "==", id).where("role", "==", 3)).valueChanges().pipe(
       map((x:any)=> x = x.map((x:any)=> combineLatest([ 
         this.store.collection("projects",ref=> ref.where("id","==",x.projectId)).valueChanges(),

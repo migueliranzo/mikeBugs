@@ -19,6 +19,7 @@ export class ProjectManagmentComponent implements OnInit {
   projects$!: Observable<any>;
   selectedProject: any;
   currentUser: any ;
+
   constructor(private projectService:ProjectService, private store: AngularFirestore, public matDialog: MatDialog, public authService: AuthService, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
@@ -26,7 +27,8 @@ export class ProjectManagmentComponent implements OnInit {
     this.authService.currentUser$.pipe(first()).subscribe(x=> {
     this.currentUser = x;
     this.projects$ = this.projectService.getUserProjects(x!.uid);
-    });
+   
+  });
   }
 
   selectProject(project:Project){
@@ -48,9 +50,12 @@ export class ProjectManagmentComponent implements OnInit {
     this.projectService.updateUsers(update);
 
     this.authService.currentUser$.subscribe(x=> {
-      this.projects$ = this.projectService.getUserProjects(x!.uid).pipe(tap(x=>{
-        
-        this.selectedProject = x.find(x=> x.id == this.selectedProject.id);
+      this.projects$ = this.projectService.getUserProjects(x!.uid).pipe(tap((x:any)=>{
+        if(!x){
+          this.selectedProject = x.find((x:any)=> x.id == this.selectedProject.id);
+        }else{
+          this.selectedProject = null;
+        }
       }));
     })
     

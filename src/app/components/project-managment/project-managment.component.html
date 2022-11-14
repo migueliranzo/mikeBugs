@@ -1,4 +1,4 @@
-<div class="flex flex-row p-8 gap-8" *ngIf="(projects$ | async)?.length; else spinner">
+<div class="flex flex-row p-8 gap-8" *ngIf="(projects$ | async) && (projects$ | async) != '0proyects' ; else spinner">
     <app-project-card [projects]="projects$ | async" class="basis-[33%]" (openProject)="selectProject($event)" ></app-project-card>
     <app-project-detail class="basis-[66%]"  [currentUser]="currentUser" (editUsers)="editUsers($event)" (sendEmail)="sendEmail($event)" [selectedProject]="selectedProject"></app-project-detail>
 </div>
@@ -9,7 +9,12 @@
     <mat-icon>add</mat-icon>
 </button>
 <ng-template #spinner >
-    <div class="flex justify-center h-[70vh] items-center">
+    
+    <div *ngIf="!(projects$ | async);" class="flex justify-center h-[70vh] items-center">
         <app-spinner></app-spinner>
     </div>
 </ng-template>
+
+<div class="flex justify-center h-[70vh] items-center" *ngIf="(projects$ | async) == '0proyects'">
+    <p class="text-2xl">You dont manage any proyects</p>
+</div>
