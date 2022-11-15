@@ -7,7 +7,7 @@
         
         <mat-progress-bar
         color="accent"
-        [value]="getCompletionProgress(project?.tickets)">
+        [value]="getCompletionProgress(project?.ticketStatus)">
     </mat-progress-bar>
     <div class="mt-4">
       {{getParticipants(project.users)}}

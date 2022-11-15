@@ -36,9 +36,9 @@ export class ProjectCardComponent implements OnInit {
     return users.find(x=> (x.email == this.currentUser.email) && (x.role == 3) );
   }
 
-  getCompletionProgress(tickets:[]):number{
-    if(tickets == undefined) return 0;
-    return (tickets.filter((x:any)=> x.completed).length / tickets.length) * 100
+  getCompletionProgress(ticketStatus:[]):number{
+    if(ticketStatus == undefined) return 0;
+    return (ticketStatus.filter((x:any)=> x == 3).length / ticketStatus.length) * 100
   }
 
 

@@ -34,9 +34,10 @@ export class ProjectService {
           map((x:any)=> x = x.map((x:any)=> combineLatest([ 
             this.store.collection("projects",ref=> ref.where("id","==",x.projectId)).valueChanges(),
             this.store.collection("user-project",ref=> ref.where("projectId","==",x.projectId)).valueChanges(),
-            this.store.collection(`projects/${x.projectId}/history`,ref=> ref.orderBy("timeStamp","desc")).valueChanges()]))),
+            this.store.collection(`projects/${x.projectId}/history`,ref=> ref.orderBy("timeStamp","desc")).valueChanges(),
+            this.store.collection("tickets", ref=> ref.where("project","==", x.projectId)).valueChanges()]))),
             switchMap((x:Observable<any>[]) => combineLatest(x)),
-            map(x=> x.map( (x:any)=> ({...x[0][0], users: x[1], history:x[2]}) ))
+            map(x=> x.map( (x:any)=> ({...x[0][0], users: x[1], history:x[2], ticketStatus:x[3].map((x:any)=>(x.status))}) ))
           
           )
       }else{
