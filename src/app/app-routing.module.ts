@@ -4,12 +4,14 @@ import { ProjectManagmentComponent } from './components/project-managment/projec
 import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
 import { ticketListComponent } from './components/ticket-list/ticket-list.component';
 import {LoginComponent} from './components/login/login.component'
+import { AuthGuardGuard } from './common/guards/auth-guard.guard';
+import { ProjectGuardGuard } from './common/guards/project-guard.guard';  
 
 const routes: Routes = [
-  {path: "project-management", component: ProjectManagmentComponent},
-  {path: "ticket-list",component: ticketListComponent},
-  {path: "my-tickets",component: ticketListComponent},
-  {path: "ticket-detail", component: TicketDetailComponent},
+  {path: "project-management", component: ProjectManagmentComponent,canActivate: [AuthGuardGuard]},
+  {path: "ticket-list",component: ticketListComponent,  canActivate: [AuthGuardGuard,ProjectGuardGuard]},
+  {path: "my-tickets",component: ticketListComponent, canActivate: [AuthGuardGuard]},
+  {path: "ticket-detail", component: TicketDetailComponent, canActivate: [AuthGuardGuard, ProjectGuardGuard]},
   {path: 'login', component: LoginComponent},
 ];
 

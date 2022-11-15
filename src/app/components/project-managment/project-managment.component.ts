@@ -51,7 +51,7 @@ export class ProjectManagmentComponent implements OnInit {
   editUsers(update: any){
     this.projectService.updateUsers(update);
     this.authService.currentUser$.subscribe(x=> {
-      this.projects$ = this.projectService.getUserProjects(x!.uid).pipe(tap((x:any)=>{
+      this.projects$ = this.projectService.getUserProjects(x!.uid).pipe(tap((x:any)=>{        
         this.selectedProject = x.find((x:any)=> x.id == this.selectedProject?.id);
       }));
     })

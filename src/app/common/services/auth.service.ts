@@ -8,8 +8,8 @@ import {
   signOut,
 } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { from } from 'rxjs';
-import { concat } from 'rxjs/operators';
+import { combineLatest, from } from 'rxjs';
+import { concat, map, switchMap, tap } from 'rxjs/operators';
 
 
 @Injectable({
@@ -62,6 +62,15 @@ export class AuthService {
 
   getUserInvitations(){
       return this.store.collection("invitations", (x=> x.where("email","==",this.auth.currentUser?.email))).valueChanges();
+    }
+
+    LoggedBelongsToProject(projectId: string){
+      
+      return authState(this.auth).pipe(switchMap((x: any)=> ( 
+        x = combineLatest(this.store.collection("user-project",ref=> ref.where("email","==",x?.email).where("projectId",'==',projectId )).valueChanges())
+      )))
+      
+
     }
   
 }

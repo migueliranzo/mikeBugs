@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild,AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild,AfterViewInit, OnDestroy } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -24,7 +24,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './ticket-list.component.html',
   styleUrls: ['./ticket-list.component.scss']
 })
-export class ticketListComponent implements OnInit {
+export class ticketListComponent implements OnInit, OnDestroy {
 
   selectedProjectId: any;
   selectedProject$: any;
@@ -46,6 +46,7 @@ export class ticketListComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  testSub?: Subscription ;
   
 
 constructor(private route: ActivatedRoute, private router: Router, private ticketService: TicketService,
@@ -65,7 +66,6 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
       endDate: null
     })
     this.formControl.valueChanges.subscribe(value => {
-      console.log(value);
       
       const filter = {...value} as string;
       this.dataSource.filter = filter;
@@ -134,14 +134,15 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
 
   goDetailTicket(ticket:Ticket){
 
+  
     if(!this.selectedProject$){
 
-      this.projectService.getProject(ticket.project).subscribe(x=>{
-        this.router.navigate(["/ticket-detail", { filter: JSON.stringify(ticket.id), project: JSON.stringify(x)}])
+      this.testSub = this.projectService.getProject(ticket.project).subscribe(x=>{
+        this.router.navigate(["/ticket-detail", { ticket: JSON.stringify(ticket.id), project: JSON.stringify(x)}])
       })
     }else{
-      this.selectedProject$.subscribe((x:any)=> {
-        this.router.navigate(["/ticket-detail", { filter: JSON.stringify(ticket.id), project: JSON.stringify(x)}])
+      this.testSub =  this.selectedProject$.subscribe((x:any)=> {
+        this.router.navigate(["/ticket-detail", { ticket: JSON.stringify(ticket.id), project: JSON.stringify(x)}])
       });
     }
 
@@ -198,6 +199,9 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
     }
   }
 
+  ngOnDestroy() {
+    this.testSub?.unsubscribe()
+}
 
 }
 

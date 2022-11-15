@@ -44,14 +44,19 @@ export class TicketDetailComponent implements OnInit {
   constructor(private route: ActivatedRoute, private ticketService: TicketService, private snackBar: MatSnackBar, private overlay: Overlay, private auth: AuthService) {}
 
   ngOnInit(): void {
-    this.ticketId = JSON.parse(this.route.snapshot.paramMap.get('filter')!);
-    this.project = JSON.parse(this.route.snapshot.paramMap.get('project')!);
-  
-    this.ticket$ = this.getTicket(this.ticketId) as Observable<{
-      ticketObj: Ticket;
-      ticketHistory: any[];
-      ticketComments: any[];
-    }>;
+
+    this.route.paramMap.subscribe((params: ParamMap) => {
+
+      this.ticketId = JSON.parse(params.get('ticket')!);
+      this.project = JSON.parse(params.get('project')!);
+
+      this.ticket$ = this.getTicket(this.ticketId) as Observable<{
+        ticketObj: Ticket;
+        ticketHistory: any[];
+        ticketComments: any[];
+      }>;
+    })
+    
     this.auth.currentUser$.subscribe(x=> this.loggedUser = x )
   
   }
@@ -123,7 +128,7 @@ export class TicketDetailComponent implements OnInit {
 
     getLoggedRole(){
       
-        return this.project.users.find((x: any)=> (x.email == this.loggedUser?.email)).role;
+        return this.project?.users?.find((x: any)=> (x.email == this.loggedUser?.email))?.role;
     }
 
     openSpinner(){
