@@ -5,7 +5,7 @@
   <div class="flex flex-col">
     <div class="p-2 bg-slate-100 grid grid-cols-4 gap-4">
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" *ngIf="this.selectedProject$">
         <mat-label>Reported by</mat-label>
         <mat-select formControlName="reporter" >
           <mat-option *ngFor="let user of users" [value]="user.email">
@@ -173,6 +173,6 @@
   aria-label="Select page of users"
 ></mat-paginator>
 
-<button (click)="openDialog()" class="right-[30px] bottom-[30px]" style="position: fixed;" mat-fab color="accent">
+<button (click)="openDialog()" *ngIf="this.selectedProject$ && (getUserRole() == 3 || getUserRole() == 2 || getUserRole() == 1)" class="right-[30px] bottom-[30px]" style="position: fixed;" mat-fab color="accent">
   <mat-icon>add</mat-icon>
 </button>

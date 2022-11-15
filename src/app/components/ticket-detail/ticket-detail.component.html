@@ -16,7 +16,7 @@
 
         <div class="text-xl w-[100%]"> 
             <p class="flex items-center underline"> {{ category[ticket.category].viewValue }} {{ticket.tId}}  </p>
-            <input [(ngModel)]="ticket.name" [ngClass]="{'border border-gray-400 rounded': editMode,'border-red-500':ticket.name.length == 0}" class=" text-ellipsis w-[90%]" style="background: none;" [disabled]="!editMode" [value]="ticket.name">
+            <input [(ngModel)]="ticket.name" [ngClass]="{'border border-gray-400 rounded': editMode && getLoggedRole() != 0,'border-red-500':ticket.name.length == 0}" class=" text-ellipsis w-[90%]" style="background: none;" [disabled]="!editMode || getLoggedRole() == 0" [value]="ticket.name">
             <p class="text-xs">Created {{formatDate(ticket.creationDate)}}</p>
         </div>
 
@@ -28,7 +28,7 @@
             <mat-icon class="text-5xl flex-1 items-center" style="width: auto;" [inline]="false">face</mat-icon>
         </ng-template>
 
-        <mat-select [ngClass]="{'border border-gray-400 rounded': editMode}" class="my-2" [disabled]="!editMode" [(ngModel)]="ticket.assigned" >
+        <mat-select [ngClass]="{'border border-gray-400 rounded': editMode && getLoggedRole() != 0}" class="my-2" [disabled]="!editMode || getLoggedRole() == 0" [(ngModel)]="ticket.assigned" >
             <mat-option value="unassigned" >Unassigned</mat-option>
             <mat-option *ngFor="let user of project.users" [value]="user.email">
             {{user.email}}
@@ -42,17 +42,16 @@
         <div class="p-2 flex gap-4">
             <div class="flex-1 flex-grow-[2]  ">
                 <p class="border-b font-medium text-base" >Description</p>
-                <textarea style="resize: none ;" [ngClass]="{'border-gray-400 ': editMode}" [(ngModel)]="ticket.description" [disabled]="!editMode" class="w-[100%]  h-[82%] border rounded p-2 bg-[#fafafa] min-h-[5rem]"> {{ticket.description}} </textarea>
+                <textarea style="resize: none ;" [ngClass]="{'border-gray-400 ': editMode && getLoggedRole() != 0}" [(ngModel)]="ticket.description" [disabled]="!editMode || getLoggedRole() == 0" class="w-[100%]  h-[82%] border rounded p-2 bg-[#fafafa] min-h-[5rem]"> {{ticket.description}} </textarea>
             </div>
             <div class="flex-1">
                 <p class="border-b font-medium text-base ">
                     Properties
                 </p>
-
-                <div class="  mb-4">
-                    <span   class="font-medium"> Status</span>  
+                <div class="mb-4">
+                    <span class="font-medium"> Status</span>  
                     <mat-select [ngClass]="{'border border-gray-400 rounded': editMode}" [disabled]="!editMode" [(ngModel)]="ticket.status" >
-                        <mat-option   [ngClass]="{
+                        <mat-option [disabled]="getLoggedRole() == 0 && (ticket.value == 4 || ticket.value == 0 )" [ngClass]="{
                             'text-green-500': ticket.value === 0,
                             'text-blue-400': ticket.value === 1,
                             'text-yellow-400': ticket.value === 2,
@@ -66,7 +65,7 @@
 
                 <div class="   mb-4">  
                     <span class="font-medium"> Priority</span>
-                    <mat-select [ngClass]="{'border border-gray-400 rounded': editMode}" [disabled]="!editMode" [(ngModel)]="ticket.priority" >
+                    <mat-select [ngClass]="{'border border-gray-400 rounded': editMode && getLoggedRole() != 0}" [disabled]="!editMode || getLoggedRole() == 0" [(ngModel)]="ticket.priority" >
                         <mat-option  *ngFor="let ticket of priority" [value]="ticket.value">
                         {{ticket.value}}
                         </mat-option>
@@ -82,7 +81,7 @@
                             'text-red-500': ticket.severity=== 2,
                             'text-red-700': ticket.severity === 3
                             }" > {{severity[ticket.severity].icon}}</mat-icon> 
-                        <mat-select [ngClass]="{'border border-gray-400 rounded': editMode}" [disabled]="!editMode" [(ngModel)]="ticket.severity" >
+                        <mat-select [ngClass]="{'border border-gray-400 rounded': editMode && getLoggedRole() != 0}" [disabled]="!editMode || getLoggedRole() == 0" [(ngModel)]="ticket.severity" >
                             <mat-option *ngFor="let ticket of severity" [value]="ticket.value">
                                 {{ticket.viewValue}}  
                             </mat-option> 
@@ -91,7 +90,7 @@
                 </div>
 
                 <div class=" mb-4 ">  <span class="font-medium"> Category</span>
-                    <mat-select [ngClass]="{'border border-gray-400 rounded': editMode}" [disabled]="!editMode" [(ngModel)]="ticket.category" >
+                    <mat-select [ngClass]="{'border border-gray-400 rounded': editMode && getLoggedRole() != 0}" [disabled]="!editMode || getLoggedRole() == 0" [(ngModel)]="ticket.category" >
                         <mat-option  *ngFor="let ticket of category" [value]="ticket.value">
                             {{ticket.viewValue}}  
                         </mat-option> 
@@ -103,7 +102,7 @@
         </div>
         <div class="flex justify-end gap-4 m-3" >
             <button mat-raised-button *ngIf="editMode" [disabled]="ticket.name.length == 0" (click)="saveTicketChanges(ticket)"> Save changes <mat-icon>save</mat-icon></button>
-            <button mat-raised-button color="accent" (click)="editMode = !editMode" > Edit <mat-icon>{{editMode? "cancel" : "edit"}}</mat-icon></button>
+            <button mat-raised-button color="accent" *ngIf="getLoggedRole() != 4" (click)="editMode = !editMode" > Edit <mat-icon>{{editMode? "cancel" : "edit"}}</mat-icon></button>
         </div>
     </div>
 

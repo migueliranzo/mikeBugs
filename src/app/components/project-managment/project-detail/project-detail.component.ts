@@ -111,5 +111,10 @@ export class ProjectDetailComponent {
     return true;
   }
 
+  getUserRole(){
+    return this.currentProject!.users?.find((x: any)=> (x.email == this.currentUser.email)).role;
+  }
+
+
 
 }

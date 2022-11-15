@@ -7,6 +7,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class ProjectCardComponent implements OnInit {
 
+  @Input() currentUser: any;
   @Input() projects:  any;
   @Output() openProject: EventEmitter<any> = new EventEmitter();
   @Output() editedProject: EventEmitter<any> = new EventEmitter();
@@ -31,6 +32,9 @@ export class ProjectCardComponent implements OnInit {
     this.editedProject.emit(x)
   }
   
+  checkRole(users: any[]){
+    return users.find(x=> (x.email == this.currentUser.email) && (x.role == 3) );
+  }
 
   getCompletionProgress(tickets:[]):number{
     if(tickets == undefined) return 0;

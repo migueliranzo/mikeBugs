@@ -26,10 +26,10 @@ export class ProjectService {
 
   getUserProjects(id:string){
 
-  return this.store.collection("user-project", ref=> ref.where("uid", "==", id).where("role", "==", 3)).valueChanges().pipe(switchMap((x:any)=> {
+  return this.store.collection("user-project", ref=> ref.where("uid", "==", id)).valueChanges().pipe(switchMap((x:any)=> {
 
       if(x.length != 0){
-        return this.store.collection("user-project", ref=> ref.where("uid", "==", id).where("role", "==", 3)).valueChanges().pipe(
+        return this.store.collection("user-project", ref=> ref.where("uid", "==", id)).valueChanges().pipe(
           map((x:any)=> x = x.map((x:any)=> combineLatest([ 
             this.store.collection("projects",ref=> ref.where("id","==",x.projectId)).valueChanges(),
             this.store.collection("user-project",ref=> ref.where("projectId","==",x.projectId)).valueChanges()]))),

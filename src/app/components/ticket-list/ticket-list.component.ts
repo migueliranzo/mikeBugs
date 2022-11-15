@@ -96,7 +96,6 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
   setUpDataTable(query$: Observable<any>){
     
     query$.pipe(tap(x=> {
-      console.log(x);
       
       this.dataSource = new MatTableDataSource(x)
       
@@ -191,6 +190,14 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
       });
     })
   }
+
+  getUserRole(){
+
+    if(this.users){ 
+      return this.users.find((x: any)=> (x.email == this.currentUser)).role;
+    }
+  }
+
 
 }
 

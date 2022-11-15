@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
   matcher = new ErrorStateMatcher();
 
   ngOnInit(): void {
+    this.authService.auth.signOut();
   }
 
   submit(){

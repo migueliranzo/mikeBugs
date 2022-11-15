@@ -12,6 +12,7 @@ import {Overlay} from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ticketListComponent } from '../ticket-list/ticket-list.component';
 import { SpinnerComponent } from '../spinner/spinner.component';
+import { AuthService } from 'src/app/common/services/auth.service';
 
 
 @Component({
@@ -38,8 +39,9 @@ export class TicketDetailComponent implements OnInit {
 
   loaded: boolean = true;
   ticketId: any; 
+  loggedUser: any;
 
-  constructor(private route: ActivatedRoute, private ticketService: TicketService, private snackBar: MatSnackBar, private overlay: Overlay) {}
+  constructor(private route: ActivatedRoute, private ticketService: TicketService, private snackBar: MatSnackBar, private overlay: Overlay, private auth: AuthService) {}
 
   ngOnInit(): void {
     this.ticketId = JSON.parse(this.route.snapshot.paramMap.get('filter')!);
@@ -50,6 +52,7 @@ export class TicketDetailComponent implements OnInit {
       ticketHistory: any[];
       ticketComments: any[];
     }>;
+    this.auth.currentUser$.subscribe(x=> this.loggedUser = x )
   
   }
 
@@ -118,7 +121,10 @@ export class TicketDetailComponent implements OnInit {
       return this.ticketService.getTicket(ticketId);
     }
 
-  
+    getLoggedRole(){
+      
+        return this.project.users.find((x: any)=> (x.email == this.loggedUser?.email)).role;
+    }
 
     openSpinner(){
       return this.overlay.create({

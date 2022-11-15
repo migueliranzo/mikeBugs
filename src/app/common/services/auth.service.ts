@@ -49,7 +49,7 @@ export class AuthService {
   }
 
   logout() {
-    return from(this.auth.signOut());
+    this.auth.signOut();
   }
 
   acceptProjectInvite(invite:any){
