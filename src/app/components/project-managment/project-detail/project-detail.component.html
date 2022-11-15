@@ -5,9 +5,17 @@
             <mat-card-content>
               <h2>{{currentProject.title}}</h2>
               <p>{{currentProject.description}}</p>
-              <div class="border rounded-md p-4">
-                Latest Project activity, tickets created, closed, comments.../Project stats
+              <div class="border rounded-md p-4 overflow-hidden" [ngClass]="{'max-h-[10rem]': hideHistory}">
+                <span *ngFor="let item of currentProject?.history" class="flex justify-between" >
+                  <span>
+                    {{item.update}} 
+                  </span>
+                  <span>
+                  {{ item.timeStamp? formatDate(item.timeStamp) : ""}}
+                  </span> 
+                </span>
               </div>
+              <button mat-button style="margin-top: 6px;" color="accent" (click)="hideHistory = !hideHistory">View more <mat-icon>{{hideHistory? "expand_less" : "expand_more"}}</mat-icon> </button>
             </mat-card-content>
             <mat-card-actions>
               <div> 

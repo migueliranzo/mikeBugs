@@ -4,8 +4,9 @@ import { forkJoin, iif, merge, Observable } from 'rxjs';
 import { from } from 'rxjs/internal/observable/from';
 import { of } from 'rxjs/internal/observable/of';
 import { combineLatest, map, combineAll, combineLatestAll, switchMap } from 'rxjs';
-import {  combineLatestWith, concatAll, concatMap, every, first, flatMap, last, mergeAll, mergeMap, retry, scan, tap, toArray } from 'rxjs/operators';
+import {  combineLatestWith, concatAll, concatMap, every, first, flatMap, last, mergeAll, mergeMap, reduce, retry, scan, tap, toArray } from 'rxjs/operators';
 import { Project } from '../models/project';
+import { serverTimestamp } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -32,9 +33,10 @@ export class ProjectService {
         return this.store.collection("user-project", ref=> ref.where("uid", "==", id)).valueChanges().pipe(
           map((x:any)=> x = x.map((x:any)=> combineLatest([ 
             this.store.collection("projects",ref=> ref.where("id","==",x.projectId)).valueChanges(),
-            this.store.collection("user-project",ref=> ref.where("projectId","==",x.projectId)).valueChanges()]))),
+            this.store.collection("user-project",ref=> ref.where("projectId","==",x.projectId)).valueChanges(),
+            this.store.collection(`projects/${x.projectId}/history`,ref=> ref.orderBy("timeStamp","desc")).valueChanges()]))),
             switchMap((x:Observable<any>[]) => combineLatest(x)),
-            map(x=> x.map( (x:any)=> ({...x[0][0], users: x[1]}) ))
+            map(x=> x.map( (x:any)=> ({...x[0][0], users: x[1], history:x[2]}) ))
           
           )
       }else{
@@ -91,7 +93,10 @@ export class ProjectService {
     for (const user in updateObject.updates) {
       this.store.collection("user-project", x=> x.where("projectId", "==", projectId).where("email","==",user)).get().forEach(x=>{
         if(updateObject.updates[user].hasOwnProperty("cheked") && updateObject.updates[user].cheked){
-          x.docs[0].ref.delete();
+          x.docs[0].ref.get().then((user:any)=>{
+            this.store.doc(`projects/${projectId}`).collection("history").add({update: `${user.data().email} was removed from the project`, timeStamp: serverTimestamp()})
+            x.docs[0].ref.delete();
+          })
         }else{
           x.docs[0].ref.update({role:updateObject.updates[user].role})
         }

@@ -6,7 +6,7 @@ import * as style from '@dicebear/miniavs';
 import { environment } from 'src/environments/environment';
 import { TicketService } from 'src/app/common/services/ticket.service';
 import { AngularFirestoreDocument } from '@angular/fire/compat/firestore';
-import { Observable, tap } from 'rxjs';
+import { Observable, take, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {Overlay} from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
@@ -88,14 +88,21 @@ export class TicketDetailComponent implements OnInit {
 
   saveComment(){
     this.loaded = false;
-    this.ticketService.addComment(this.comment, this.ticketId).subscribe((error)=>{
-      if(error){
-        this.snackBar.open("There was an error saving your comment", "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
-      }else{
-        this.loaded = true;
-        this.comment = "";
-      }    
+
+    this.ticket$?.pipe(take(1)).subscribe((response:any)=>{
+
+      this.ticketService.addComment(this.comment, response.ticketObj, response.ticketObj.project).subscribe((error)=>{
+        if(error){
+          this.snackBar.open("There was an error saving your comment", "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
+        }else{
+          this.loaded = true;
+          this.comment = "";
+        }    
+      })
+
     })
+
+    
   }
 
     getProfilePic(seed:string){

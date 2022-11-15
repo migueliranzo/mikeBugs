@@ -12,7 +12,6 @@ import { AuthService } from './common/services/auth.service';
 export class AppComponent implements OnInit{
   title = 'mikeBugs';
   links = [
-    {name: "Dashboard", url: '/dashboard', icon: "dashboard" },
     {name: "My Tickets", url: '/my-tickets', icon: "receipt_long"},
     {name: "Projects", url: '/project-management', icon: "edit_document"},
   ]

@@ -6,4 +6,5 @@ export interface Project {
     description:string;
     tickets: any;
     users:any;
+    history: any;
 }

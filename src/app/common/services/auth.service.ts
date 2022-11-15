@@ -8,6 +8,7 @@ import {
   signOut,
 } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { serverTimestamp } from '@angular/fire/firestore';
 import { combineLatest, from } from 'rxjs';
 import { concat, map, switchMap, tap } from 'rxjs/operators';
 
@@ -59,6 +60,7 @@ export class AuthService {
     
     return from(this.store.collection("invitations").doc(invite.id).delete().then(x=>{
       return  this.store.collection("user-project").add({email: invite.email, projectId: invite.projectId, role: 4, uid:  this.auth.currentUser?.uid }).then(x=>{
+        this.store.doc(`projects/${invite.projectId}`).collection("history").add({update: `${invite.email} joined the project`, timeStamp: serverTimestamp()})
         return false;
       }).catch(x=>{
         return true

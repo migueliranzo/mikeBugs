@@ -18,17 +18,18 @@ export class ProjectDetailComponent {
   displayedColumns: string[] = [];
   roles?: any[] = environment.roles;
   viewMode: boolean = true;
-  currentProject: { id: string; title: string; subtitle: string; description: string; tickets: any; users: any; } | undefined;
+  currentProject: Project | undefined;
 
   changes: {[key: string]: any} = {updates: {}};
 
+  hideHistory: boolean = false;
   
   dataSource!: MatTableDataSource<any>;
 
   @Input() currentUser: any;
   @Input() set selectedProject(project:Project){
     if(!project) return;
-    
+    this.hideHistory = true;
     this.viewMode = true;
     this.displayedColumns = ['name', 'role'];
     this.currentProject = project;
@@ -115,6 +116,21 @@ export class ProjectDetailComponent {
     return this.currentProject!.users?.find((x: any)=> (x.email == this.currentUser.email)).role;
   }
 
+  formatDate(date:any){
+    const today = new Date(date.seconds*1000);
+    const yyyy = today.getFullYear();
+    let mm: any = today.getMonth() + 1; // Months start at 0!
+    let dd:any = today.getDate();
+    
+    let h: any = today.getHours()
+    let mins: any = today.getMinutes()
+
+    if (mins < 10) mins = '0' + mins;
+    if (dd < 10) dd = '0' + dd;
+    if (mm < 10) mm = '0' + mm;
+
+    return  (dd + '/' + mm + '/' + yyyy + " " + h + ":" + mins);
+  }
 
 
 }

@@ -30,6 +30,7 @@ export class ProjectManagmentComponent implements OnInit {
     this.authService.currentUser$.pipe(first()).subscribe(x=> {
     this.currentUser = x;
     this.projects$ = this.projectService.getUserProjects(x!.uid).pipe(tap(x=>{
+      
       this.selectedProject = x[0];
     }));
   

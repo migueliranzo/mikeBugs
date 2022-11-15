@@ -52,6 +52,7 @@ export class TicketService {
     ]).pipe(switchMap( ([oldTicket,user]) =>( 
       this.areDifferent(newTicket, oldTicket.data() as Ticket) ? 
         oldTicket.ref.collection("history").add(this.getTicketChanges(newTicket, oldTicket.data() as Ticket, user?.email as any)).then(x=>{
+        this.store.doc(`projects/${newTicket.project}`).collection("history").add({update: `${newTicket.name} was updated by ${user?.email}`, timeStamp: serverTimestamp()})
         oldTicket.ref.update(newTicket);
         return false;
       }).catch(x=>{
@@ -64,8 +65,9 @@ export class TicketService {
   createTicket(ticket: any, projectId:string, reporterMail: any){
     
   return this.store.collection("tickets",ref => ref.where("project", "==", projectId)).get().pipe(switchMap(x=> (
-      this.store.collection("tickets").add({...ticket, tId: x.size, project: projectId, reporter: reporterMail}).then(ticket=>{
-        this.store.collection("tickets").doc(ticket.id).update({id:ticket.id});
+      this.store.collection("tickets").add({...ticket, tId: x.size, project: projectId, reporter: reporterMail}).then(newTicket=>{
+        this.store.collection("tickets").doc(newTicket.id).update({id:newTicket.id});
+        this.store.doc(`projects/${projectId}`).collection("history").add({update: `${ticket.name} was created by ${reporterMail}`, timeStamp: serverTimestamp()})
         return false;
       }).catch(x=>{
         return true;
@@ -102,8 +104,10 @@ areDifferent(newTicket:Ticket, oldTicket:Ticket){
   return false;
 }
 
-addComment(newComment:string, ticketId:number){
-  let ticket = this.store.doc(`tickets/${ticketId}`).ref;
+addComment(newComment:string, inputTicket:any, projectId: string){
+  console.log(inputTicket, projectId);
+  
+  let ticket = this.store.doc(`tickets/${inputTicket.id}`).ref;
 
   return this.auth.currentUser$.pipe(switchMap(x=> concat(
     ticket.collection("history").add({author:x?.email, comment:newComment, timestamp: serverTimestamp()}).then(x=>{
@@ -113,6 +117,12 @@ addComment(newComment:string, ticketId:number){
       return true;
     }),
     ticket.collection("comments").add({user:x?.email, comment:newComment, timestamp: serverTimestamp()}).then(x=>{
+      x.id
+      return false;
+    }).catch(x=>{
+      return true;
+    }),
+    this.store.doc(`projects/${projectId}`).collection("history").add({update: `${x?.email} commented on ${inputTicket.name}`, timeStamp: serverTimestamp()}).then(x=>{
       x.id
       return false;
     }).catch(x=>{

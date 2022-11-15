@@ -21,10 +21,10 @@ export class ProjectCardComponent implements OnInit {
     if(devs == undefined) return;
     return {
       0: `No one is currently working on this project`,
-      1: `${devs[0]?.email} is working on this`,
-      2: `${devs[0]?.email} and ${devs[1]?.email} work on this`,
-      3: `${devs[0]?.email}, ${devs[1]?.email}, and ${devs[2]?.email} work on this`,
-      4: `${devs[0]?.email}, ${devs[1]?.email} and ${devs.length - 2 } others are working on this`,
+      1: `${devs[0]?.email.substr(0,devs[0]?.email.indexOf('@'))} is working on this`,
+      2: `${devs[0]?.email.substr(0,devs[0]?.email.indexOf('@'))} and ${devs[1]?.email.substr(0,devs[1]?.email.indexOf('@'))} work on this`,
+      3: `${devs[0]?.email.substr(0,devs[0]?.email.indexOf('@'))}, ${devs[1]?.email.substr(0,devs[1]?.email.indexOf('@'))}, and ${devs[2]?.email.substr(0,devs[2]?.email.indexOf('@'))} work on this`,
+      4: `${devs[0]?.email.substr(0,devs[0]?.email.indexOf('@'))}, ${devs[1]?.email.substr(0,devs[1]?.email.indexOf('@'))} and ${devs.length - 2 } others are working on this`,
     }[Math.min(4, devs.length)]; 
   }
 
