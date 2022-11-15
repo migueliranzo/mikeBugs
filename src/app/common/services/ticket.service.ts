@@ -24,6 +24,10 @@ export class TicketService {
     return this.store.collection('tickets');
   }
 
+  getUserTickets(email: string){
+    return this.store.collection('tickets',ref=> ref.where("assigned","==", email));
+  }
+
   getTicket(id:number){
     return  combineLatest([
     this.store.doc(`tickets/${id}`).valueChanges(), 

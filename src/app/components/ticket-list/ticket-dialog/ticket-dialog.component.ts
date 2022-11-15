@@ -12,7 +12,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './ticket-dialog.component.html',
   styleUrls: ['./ticket-dialog.component.scss']
 })
-export class TicketDialogComponent implements OnInit {
+export class TicketDialogComponent {
 
   priorities: any[] = environment.priorityIterable;
   statuses: any[] = environment.statusIterable;
@@ -35,10 +35,6 @@ export class TicketDialogComponent implements OnInit {
   @Output() ticketToAdd: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
-
-  ngOnInit(): void {
-    
-  }
 
   saveTicket(){
     this.ticketToAdd.emit(this.editedTicket.value);

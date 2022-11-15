@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { first, from, last, map, Observable, take, takeLast, takeUntil, takeWhile, tap, toArray } from 'rxjs';
+import { first, from, last, map, Observable, of, take, takeLast, takeUntil, takeWhile, tap, toArray } from 'rxjs';
 import { Project } from 'src/app/common/models/project';
 import { ProjectService } from 'src/app/common/services/project.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
@@ -26,7 +26,9 @@ export class ProjectManagmentComponent implements OnInit {
 
     this.authService.currentUser$.pipe(first()).subscribe(x=> {
     this.currentUser = x;
-    this.projects$ = this.projectService.getUserProjects(x!.uid);
+    this.projects$ = this.projectService.getUserProjects(x!.uid).pipe(tap(x=>{
+      this.selectedProject = x[0];
+    }));
   
   });
   }
@@ -50,14 +52,14 @@ export class ProjectManagmentComponent implements OnInit {
     this.projectService.updateUsers(update);
     this.authService.currentUser$.subscribe(x=> {
       this.projects$ = this.projectService.getUserProjects(x!.uid).pipe(tap((x:any)=>{
-        if(x){
-          this.selectedProject = x.find((x:any)=> x.id == this.selectedProject.id);
-        }else{
-          this.selectedProject = null;
-        }
+
+        console.log(x);
+        console.log(this.selectedProject);
+        
+        this.selectedProject = x.find((x:any)=> x.id == this.selectedProject?.id);
       }));
     })
-    
+
   }
 
   editProject(project: any){
@@ -75,7 +77,9 @@ export class ProjectManagmentComponent implements OnInit {
         }else{
           this.projects$ = this.projectService.getUserProjects(this.currentUser.uid).pipe(tap((x:any)=>{
             if(x){
-              this.selectedProject = x.find((x:any)=> x.id == this.selectedProject.id);
+              if(this.selectedProject){
+                this.selectedProject = x.find((x:any)=> x.id == this.selectedProject.id);
+              }
             }else{
               this.selectedProject = null;
             }

@@ -8,6 +8,7 @@ import {LoginComponent} from './components/login/login.component'
 const routes: Routes = [
   {path: "project-management", component: ProjectManagmentComponent},
   {path: "ticket-list",component: ticketListComponent},
+  {path: "my-tickets",component: ticketListComponent},
   {path: "ticket-detail", component: TicketDetailComponent},
   {path: 'login', component: LoginComponent},
 ];

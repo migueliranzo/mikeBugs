@@ -14,7 +14,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" *ngIf="this.selectedProject$">
         <mat-label>Assigned to</mat-label>
         <mat-select formControlName="assigned" >
           <mat-option *ngFor="let user of users" [value]="user.email">

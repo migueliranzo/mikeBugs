@@ -45,6 +45,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatTabsModule} from '@angular/material/tabs';
 
 
 @NgModule({
@@ -69,6 +70,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     AngularFireModule.initializeApp(environment.firebase),
     MatNativeDateModule,
     OverlayModule,
+    MatTabsModule,
     MatDatepickerModule,
     MatMenuModule,
     MatExpansionModule,

@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ParamMap, ActivatedRoute} from '@angular/router';
-import { first, map, Observable, Subscription, tap } from 'rxjs';
+import { first, map, Observable, of, Subscription, tap } from 'rxjs';
 import { Ticket } from 'src/app/common/models/ticket';
 import { TicketService } from 'src/app/common/services/ticket.service';
 import { Router } from '@angular/router';
@@ -73,10 +73,13 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
   }
 
   ngOnInit(): void {
-    
+    this.selectedProject$ = null;
     this.route.paramMap.subscribe((params: ParamMap) => {
       if (params.get('filter') == null || (params.get('filter') ==  undefined)) {
-        return;
+        
+        this.authService.currentUser$.subscribe((x:any)=> 
+        this.setUpDataTable( this.ticketService.getUserTickets(x.email).valueChanges())
+        );
       }
       
       this.authService.currentUser$.subscribe(x=> this.currentUser = x?.email);
@@ -84,16 +87,17 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
       this.selectedProject$ = this.projectService.getProject(this.selectedProjectId);
       this.selectedProject$.subscribe((x:any)=> this.users = x.users);
       
-      this.setUpDataTable();
+      this.setUpDataTable(this.ticketService.getProjectTickets(this.selectedProjectId).valueChanges());
     });
   }
 
 
 
-  setUpDataTable(){
+  setUpDataTable(query$: Observable<any>){
     
-    this.ticketService.getProjectTickets(this.selectedProjectId).valueChanges().pipe(tap(x=> {
-
+    query$.pipe(tap(x=> {
+      console.log(x);
+      
       this.dataSource = new MatTableDataSource(x)
       
       this.dataSource.filterPredicate = ((data, filter:any) => {
@@ -130,10 +134,18 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
   }
 
   goDetailTicket(ticket:Ticket){
-    this.selectedProject$.subscribe((x:any)=> {
-      this.router.navigate(["/ticket-detail", { filter: JSON.stringify(ticket.id), project: JSON.stringify(x)}])
-    });
-    
+
+    if(!this.selectedProject$){
+
+      this.projectService.getProject(ticket.project).subscribe(x=>{
+        this.router.navigate(["/ticket-detail", { filter: JSON.stringify(ticket.id), project: JSON.stringify(x)}])
+      })
+    }else{
+      this.selectedProject$.subscribe((x:any)=> {
+        this.router.navigate(["/ticket-detail", { filter: JSON.stringify(ticket.id), project: JSON.stringify(x)}])
+      });
+    }
+
   }
 
   dateIsOnRange(check: Date, to:Date, from:Date){
@@ -170,10 +182,12 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
       this.ticketService.createTicket(ticket,this.selectedProjectId, this.currentUser).subscribe(error=>{
         if(error){
           this.snackBar.open("Error, try again later", "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
+          
         }else{
           this.snackBar.open("Ticket created successfully!", "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
-          overlayRef.destroy();
+        
         }
+        overlayRef.destroy();
       });
     })
   }

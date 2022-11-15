@@ -12,7 +12,7 @@ export class AppComponent implements OnInit{
   title = 'mikeBugs';
   links = [
     {name: "Dashboard", url: '/dashboard', icon: "dashboard" },
-    {name: "Tickets", url: '/ticket-list', icon: "receipt_long"},
+    {name: "My Tickets", url: '/my-tickets', icon: "receipt_long"},
     {name: "Projects", url: '/project-management', icon: "edit_document"},
   ]
 

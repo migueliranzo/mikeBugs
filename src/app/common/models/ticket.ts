@@ -9,7 +9,7 @@ export interface Ticket {
     severity: number;
     priority: number;
     category:string;
-    project:number;
+    project:string;
     creationDate: string;
     lastUpdateChange: string;
     tId: number;
