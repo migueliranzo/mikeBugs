@@ -15,7 +15,6 @@ export class ProjectGuardGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       
       let projectId = null;
-
       if(route.params?.["filter"]){
         projectId = route.params?.["filter"];
       }else{

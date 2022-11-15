@@ -55,6 +55,13 @@ export class TicketDetailComponent implements OnInit {
         ticketHistory: any[];
         ticketComments: any[];
       }>;
+
+      this.ticket$.pipe(tap(x=>{
+        console.log(this.project);
+        
+        this.auth.currentProject = this.project;
+        this.auth.currentTicket = x.ticketObj;
+      })).subscribe()
     })
     
     this.auth.currentUser$.subscribe(x=> this.loggedUser = x )

@@ -17,6 +17,7 @@
       <mat-form-field appearance="outline" *ngIf="this.selectedProject$">
         <mat-label>Assigned to</mat-label>
         <mat-select formControlName="assigned" >
+          <mat-option value="unassigned" > Unassigned </mat-option>
           <mat-option *ngFor="let user of users" [value]="user.email">
             {{ user.email }}
           </mat-option>
@@ -118,6 +119,11 @@
   <ng-container matColumnDef="category">
     <th mat-header-cell mat-sort-header *matHeaderCellDef>Category</th>
     <td mat-cell *matCellDef="let element">{{ categories[element.category].viewValue }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="assigned">
+    <th mat-header-cell mat-sort-header *matHeaderCellDef>Assigned to</th>
+    <td mat-cell *matCellDef="let element">{{ element.assigned }}</td>
   </ng-container>
 
   <ng-container matColumnDef="status">

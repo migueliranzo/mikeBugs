@@ -24,6 +24,9 @@ export class ProjectManagmentComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.authService.currentProject = null;
+    this.authService.currentTicket = null;
+    
     this.authService.currentUser$.pipe(first()).subscribe(x=> {
     this.currentUser = x;
     this.projects$ = this.projectService.getUserProjects(x!.uid).pipe(tap(x=>{

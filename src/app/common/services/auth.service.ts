@@ -17,6 +17,9 @@ import { concat, map, switchMap, tap } from 'rxjs/operators';
 })
 export class AuthService {
 
+  currentProject: any;
+  currentTicket: any;
+  
   currentUser$ = authState(this.auth);
 
   constructor(public auth: Auth, private store: AngularFirestore) { }
@@ -54,9 +57,13 @@ export class AuthService {
 
   acceptProjectInvite(invite:any){
     
-    this.store.collection("invitations").doc(invite.id).delete().then(x=>{
-      this.store.collection("user-project").add({email: invite.email, projectId: invite.projectId, role: 4, uid:  this.auth.currentUser?.uid })
-    })
+    return from(this.store.collection("invitations").doc(invite.id).delete().then(x=>{
+      return  this.store.collection("user-project").add({email: invite.email, projectId: invite.projectId, role: 4, uid:  this.auth.currentUser?.uid }).then(x=>{
+        return false;
+      }).catch(x=>{
+        return true
+      })
+    }))
 
   }
 

@@ -41,7 +41,7 @@ export class ticketListComponent implements OnInit, OnDestroy {
   readonly formControl: FormGroup;
 
   //Filter table bindings
-  displayedColumns: string[] = ["tId","name" ,"priority", "severity" ,"status", "category", "creationDate"];
+  displayedColumns: string[] = ["tId","name" ,"priority", "assigned", "severity" ,"status", "category", "creationDate"];
 
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -77,17 +77,24 @@ constructor(private route: ActivatedRoute, private router: Router, private ticke
     this.route.paramMap.subscribe((params: ParamMap) => {
       if (params.get('filter') == null || (params.get('filter') ==  undefined)) {
         
+        this.authService.currentProject = null;
+        this.authService.currentTicket = null;
         this.authService.currentUser$.subscribe((x:any)=> 
         this.setUpDataTable( this.ticketService.getUserTickets(x.email).valueChanges())
         );
+      }else{
+
+      
+        this.authService.currentUser$.subscribe(x=> this.currentUser = x?.email);
+        this.selectedProjectId = params.get('filter');
+        this.selectedProject$ = this.projectService.getProject(this.selectedProjectId).pipe(tap(x=>{
+          this.authService.currentProject = x;
+        }));
+        this.selectedProject$.subscribe((x:any)=> this.users = x.users);
+        
+        this.setUpDataTable(this.ticketService.getProjectTickets(this.selectedProjectId).valueChanges());
+
       }
-      
-      this.authService.currentUser$.subscribe(x=> this.currentUser = x?.email);
-      this.selectedProjectId = params.get('filter');
-      this.selectedProject$ = this.projectService.getProject(this.selectedProjectId);
-      this.selectedProject$.subscribe((x:any)=> this.users = x.users);
-      
-      this.setUpDataTable(this.ticketService.getProjectTickets(this.selectedProjectId).valueChanges());
     });
   }
 

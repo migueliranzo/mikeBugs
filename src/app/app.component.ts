@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationStart, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, NavigationStart, ParamMap, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from './common/services/auth.service';
 
@@ -21,7 +22,7 @@ export class AppComponent implements OnInit{
 
   invites$: Observable<any[]> | null = null;
 
-  constructor(private router: Router, public auth: AuthService) {
+  constructor(private router: Router, public auth: AuthService, private snackBar: MatSnackBar) {
       router.events.forEach((event) => {
         if (event instanceof NavigationStart) {
           if (event['url'] == '/login') {
@@ -38,8 +39,9 @@ export class AppComponent implements OnInit{
       });
       
     }
-  ngOnInit(): void {
+
     
+  ngOnInit(): void {  
     if(this.auth.currentUser$){
       this.auth.currentUser$.subscribe( x=>
         this.invites$ =  this.auth.getUserInvitations()
@@ -49,7 +51,13 @@ export class AppComponent implements OnInit{
 
   acceptInvite(invite: any){
 
-    this.auth.acceptProjectInvite(invite);
+    this.auth.acceptProjectInvite(invite).subscribe((error:any)=>{
+      if(error){
+        this.snackBar.open("There was an error accepting the invite", "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
+      }else{
+        this.snackBar.open("Invitation accepted successfully!", "OK",{verticalPosition:'bottom',horizontalPosition:'left', duration: 1200});
+      }
+    });
   }
 
     logOut(){

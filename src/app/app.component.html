@@ -1,13 +1,23 @@
 
 <mat-toolbar color="primary" *ngIf="showTop">
   <div class="flex w-[100%] justify-between">
-    <span>MKBugs</span>
+    
+    <span >
+      <span class="mr-6"> MKBugs </span>
+      <span class="font-light">
+      <a *ngIf="auth.currentProject?.title" class="cursor-pointer hover:text-pink-600" href="{{'ticket-list;filter=' + auth.currentProject?.id }}">
+        <ng-container >{{auth.currentProject?.title }}</ng-container>
+      </a>  
+      <ng-container *ngIf="auth.currentTicket?.name" >/{{auth.currentTicket?.name}}</ng-container> 
+    </span>
+    </span>
+
     <button *ngIf="!(auth.currentUser$ | async); else logged" mat-icon-button routerLink="/login" > <mat-icon>account_circle</mat-icon> </button>
     <ng-template #logged>
       <div class="flex items-center gap-8">
         <div class="flex items-center gap-2">
           {{(auth.currentUser$ | async)?.email}}
-          <mat-icon  [matBadge]="(invites$ | async)?.length" [matBadgeHidden]="((invites$ | async)?.length == 0)"  matBadgeColor="warn" [matMenuTriggerFor]="menu" >mail</mat-icon>
+          <mat-icon  [matBadge]="(invites$ | async)?.length" [matBadgeHidden]="((invites$ | async)?.length == 0)"  matBadgeColor="warn" [matMenuTriggerFor]="menu">mail</mat-icon>
 
           <mat-menu #menu="matMenu">
 

@@ -100,10 +100,6 @@
                 <p class="flex justify-between">    <span class="font-medium"> Reporter</span> {{ticket.reporter.substr(0,  ticket.reporter.indexOf('@')) }}</p>
             </div>
         </div>
-        {{getLoggedRole() == 0 }}
-        {{ getLoggedRole() == 0 && loggedUser?.email == ticket.assigned}}
-        {{loggedUser?.email}}
-        {{ticket.assigned }}
         <div class="flex justify-end gap-4 m-3" >
             <button mat-raised-button *ngIf="editMode" [disabled]="ticket.name.length == 0" (click)="saveTicketChanges(ticket)"> Save changes <mat-icon>save</mat-icon></button>
             <button mat-raised-button color="accent" *ngIf="getLoggedRole() != 4 && ((getLoggedRole() == 0 && loggedUser?.email == ticket.assigned) || getLoggedRole() != 0)" (click)="editMode = !editMode" > Edit <mat-icon>{{editMode? "cancel" : "edit"}}</mat-icon></button>
@@ -165,7 +161,7 @@
 
                     <ng-container *ngFor="let property of update | keyvalue">
                         <div *ngIf="getKey(property) == 'comment'">
-                            <span style="word-break: break-word;"  class="whitespace-pre-wrap" >{{getValue(property)}}</span>
+                            <span style="word-break: break-word;"  class="whitespace-pre-wrap" ><span class="font-medium" >Commented</span>: {{getValue(property)}}</span>
                         </div>
                         
                         <div *ngIf="getValue(property) && getValue(property).hasOwnProperty('oldValue')" class="flex flex-col  mb-6 mt-3">
