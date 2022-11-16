@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, NavigationStart, ParamMap, Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -9,12 +9,33 @@ import { AuthService } from './common/services/auth.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
   title = 'mikeBugs';
   links = [
     {name: "My Tickets", url: '/my-tickets', icon: "receipt_long"},
     {name: "Projects", url: '/project-management', icon: "edit_document"},
   ]
+
+  sideBarMode: any = "side";
+  loadedSmall: boolean = false;
+
+  @ViewChild('sidenav') sidenav: any;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: { target: { innerWidth: number; }; }) {
+    
+      this.loadedSmall = false;
+
+      if (event.target.innerWidth > 767 && this.showLeft) {
+
+        this.sideBarMode = "side";
+        this.sidenav.open();
+      }else{
+        this.sideBarMode = "over";
+        this.sidenav.close();
+      }
+  }
+
 
   showTop: boolean = false;
   showLeft: boolean = false;
@@ -33,11 +54,20 @@ export class AppComponent implements OnInit{
           }else{
             this.showTop = true;
             this.showLeft = true;
+
+            if (window.innerWidth < 767 && this.showLeft) {
+            
+              this.sideBarMode = "over";
+              this.sidenav.close();
+              console.log(this.sidenav);  
+              this.loadedSmall = true;
+            }
+
           }
         }
       });
-      
     }
+
 
     
   ngOnInit(): void {  

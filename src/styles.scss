@@ -8,6 +8,7 @@ body {
     font-family: Roboto, sans-serif;
     height: 100%;
     display: flex;
+    width: 100vw;
 }
 
 html,
@@ -24,6 +25,7 @@ app-root {
     display: flex;
     flex-direction: column;
     flex: 1;
+    width: 100%;
 }
 
 mat-sidenav {

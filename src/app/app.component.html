@@ -3,13 +3,14 @@
   <div class="flex w-[100%] justify-between">
     
     <span >
-      <span class="mr-6"> MKBugs </span>
-      <span class="font-light">
+      <span class="mr-6" *ngIf="sideBarMode == 'side'; else burgerMenu" > MKBugs </span>
+      <ng-template #burgerMenu>   <mat-icon (click)="sidenav.open()" class="mt-2">menu</mat-icon>   </ng-template>
+      <span class="font-light md:contents hidden">
         <a *ngIf="auth.currentProject?.title"  class="cursor-pointer hover:text-pink-600" routerLink="/project-management">Projects/</a>
       <a *ngIf="auth.currentProject?.title" class="cursor-pointer hover:text-pink-600" href="{{'ticket-list;filter=' + auth.currentProject?.id }}">
         <ng-container >{{auth.currentProject?.title }}</ng-container>
       </a>  
-      <ng-container *ngIf="auth.currentTicket?.name" >/{{auth.currentTicket?.name}}</ng-container> 
+      <ng-container *ngIf="auth.currentTicket?.tId" >/{{auth.currentTicket?.tId}}</ng-container> 
     </span>
     </span>
 
@@ -43,7 +44,7 @@
 </mat-toolbar>
 
 <mat-sidenav-container  class="mainContainer">
-    <mat-sidenav  class="sideBar" mode="side" [opened]="showLeft">
+    <mat-sidenav #sidenav class="sideBar" [mode]="sideBarMode" [opened]="showLeft && !loadedSmall">
       <nav>
         <a class="items-center" mat-button style="display: flex;" *ngFor="let link of links" 
         [routerLink]="link.url" routerLinkActive="text-[#ff4182]"> 

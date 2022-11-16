@@ -87,6 +87,7 @@
   </div>
 </form>
 
+<div class="overflow-x-scroll">
 <table mat-table matSort [dataSource]="dataSource" class="w-[100%]">
   <ng-container matColumnDef="priority">
     <th mat-header-cell mat-sort-header *matHeaderCellDef>Priority</th>
@@ -169,6 +170,7 @@
     <td class="p-2" colspan="4">No result matches this query</td>
   </tr>
 </table>
+</div>
 
 <div *ngIf="!dataSource" class="flex justify-center h-[20%] items-center">
   <app-spinner></app-spinner>
