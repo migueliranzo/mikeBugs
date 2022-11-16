@@ -1,7 +1,7 @@
 <h1 *ngIf="project == undefined; else edit" mat-dialog-title>Create new project</h1>
 <ng-template #edit> <h1 mat-dialog-title>Edit project</h1>  </ng-template>
 <form class="example-form" [formGroup]="editedProject">
-<div mat-dialog-content class="flex-col min-w-[25rem]" style="display: flex;">
+<div mat-dialog-content class="flex-col sm:min-w-[25rem]" style="display: flex;">
     
         <mat-form-field class="example-full-width" appearance="outline">
           <mat-label>Project name</mat-label>

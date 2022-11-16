@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Project } from 'src/app/common/models/project';
 
 @Component({
   selector: 'app-project-card',
@@ -11,6 +12,8 @@ export class ProjectCardComponent implements OnInit {
   @Input() projects:  any;
   @Output() openProject: EventEmitter<any> = new EventEmitter();
   @Output() editedProject: EventEmitter<any> = new EventEmitter();
+
+  @Input() selectedProject:any;
 
   constructor() { }
 

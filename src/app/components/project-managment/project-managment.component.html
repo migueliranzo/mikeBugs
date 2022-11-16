@@ -1,22 +1,22 @@
 
 
-        <div class="flex flex-row p-8 gap-8" *ngIf="(projects$ | async) && (projects$ | async) != '0proyects' ; else spinner">
-            <app-project-card [currentUser]="currentUser"  [projects]="projects$ | async" class="basis-[33%] max-w-[33%]" (editedProject)="editProject($event)" (openProject)="selectProject($event)" ></app-project-card>
-            <app-project-detail class="basis-[66%]"  [currentUser]="currentUser" (editUsers)="editUsers($event)" (sendEmail)="sendEmail($event)" [selectedProject]="selectedProject"></app-project-detail>
-        </div>
+<div class="flex flex-row p-8 gap-8 flex-wrap sm:flex-nowrap justify-center" *ngIf="(projects$ | async) && (projects$ | async) != '0proyects' ; else spinner">
+    <app-project-card [currentUser]="currentUser" [selectedProject]="selectedProject" [projects]="projects$ | async" class="sm:basis-[33%] sm:max-w-[33%]" (editedProject)="editProject($event)" (openProject)="selectProject($event)" ></app-project-card>
+    <app-project-detail class="basis-[66%] w-[100%] sm:max-w-[66%]"  [currentUser]="currentUser" (editUsers)="editUsers($event)" (sendEmail)="sendEmail($event)" [selectedProject]="selectedProject"></app-project-detail>
+</div>
 
 
-        <button (click)="openDialog()" class="right-[30px] bottom-[30px]" style="position: fixed;" mat-fab color="accent">
-            <mat-icon>add</mat-icon>
-        </button>
+<button (click)="openDialog()" class="right-[30px] bottom-[30px]" style="position: fixed;" mat-fab color="accent">
+    <mat-icon>add</mat-icon>
+</button>
 
-        <ng-template #spinner >
-            <div *ngIf="!(projects$ | async);" class="flex justify-center h-[70vh] items-center">
-            <app-spinner></app-spinner>
-            </div>
-        </ng-template>
+<ng-template #spinner >
+    <div *ngIf="!(projects$ | async);" class="flex justify-center h-[70vh] items-center">
+    <app-spinner></app-spinner>
+    </div>
+</ng-template>
 
-        <div class="flex justify-center h-[70vh] items-center" *ngIf="(projects$ | async) == '0proyects'">
-            <p class="text-2xl">You dont participate in any proyects</p>
-        </div>
+<div class="flex justify-center h-[70vh] items-center" *ngIf="(projects$ | async) == '0proyects'">
+    <p class="text-2xl">You dont participate in any proyects</p>
+</div>
 
