@@ -40,6 +40,12 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  logInAsDemo(){
+    this.authService.login("demo@gmail.com" as string,"123456" as string).subscribe(error=> {
+      error ? this.invalidCredentials = true : this.router.navigateByUrl("project-management");
+    });
+  }
+
   resetPassword(){
     this.isResetingPassword = true;
     this.authService.resetMail(this.emailFormControl.value as string).subscribe(x=>{

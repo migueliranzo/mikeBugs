@@ -42,10 +42,17 @@
             </mat-form-field>
             
         <button mat-raised-button color="accent" (click)="submit()" [disabled]="valid()" >{{ isSigning ? "Create account" : "Log in" }}</button>
-        <div class="flex mt-3 justify-around" >
-            <a  class="cursor-pointer text-blue-400 " (click)="isSigning = !isSigning; invalidCredentials = false">{{ isSigning ? "Log in" : "Create account" }}</a>
-            <a  class="cursor-pointer text-blue-400 " (click)=" isResetingPassword = true; emailFormControl.reset()" >Forgot password</a>
-        </div>
+        <div class="flex mt-3 flex-col gap-3" >
+            <div class="justify-around flex">
+                <a  class="cursor-pointer text-blue-400 " (click)="isSigning = !isSigning; invalidCredentials = false">{{ isSigning ? "Log in" : "Create account" }}</a>
+                <a  class="cursor-pointer text-blue-400 " (click)=" isResetingPassword = true; emailFormControl.reset()" >Forgot password</a>
+            </div>
+
+            <div class="flex justify-center gap-4 text-xl">
+                Just checking the site?  <a  class="cursor-pointer text-blue-500 font-medium " (click)="logInAsDemo()"> log in as a demo user</a>
+            </div>
+            
+            </div>
     </form>
 
     <form class="flex flex-col" *ngIf="isResetingPassword">

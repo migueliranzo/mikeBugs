@@ -57,8 +57,6 @@ export class TicketDetailComponent implements OnInit {
       }>;
 
       this.ticket$.pipe(tap(x=>{
-        console.log(this.project);
-        
         this.auth.currentProject = this.project;
         this.auth.currentTicket = x.ticketObj;
       })).subscribe()
@@ -124,6 +122,7 @@ export class TicketDetailComponent implements OnInit {
       if (mins < 10) mins = '0' + mins;
       if (dd < 10) dd = '0' + dd;
       if (mm < 10) mm = '0' + mm;
+      if (h < 10) h = '0' + h;
 
       return  (dd + '/' + mm + '/' + yyyy + " " + h + ":" + mins);
     }

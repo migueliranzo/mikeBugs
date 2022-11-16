@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AbstractControl, FormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { environment } from 'src/environments/environment';
+import { AuthService } from 'src/app/common/services/auth.service';
 @Component({
   selector: 'app-project-detail',
   templateUrl: './project-detail.component.html',
@@ -44,7 +45,7 @@ export class ProjectDetailComponent {
   matcher = new ErrorStateMatcher();
 
 
-  constructor(private router:Router, public matDialog: MatDialog) {  }
+  constructor(private router:Router, public matDialog: MatDialog, public auth: AuthService) {  }
 
 
   editMode(){
@@ -116,6 +117,11 @@ export class ProjectDetailComponent {
     return this.currentProject!.users?.find((x: any)=> (x.email == this.currentUser.email)).role;
   }
 
+  inviteDemoUser(){
+
+    this.auth.inviteDemoUser(this.currentProject?.id);
+  }
+
   formatDate(date:any){
     const today = new Date(date.seconds*1000);
     const yyyy = today.getFullYear();
@@ -128,6 +134,7 @@ export class ProjectDetailComponent {
     if (mins < 10) mins = '0' + mins;
     if (dd < 10) dd = '0' + dd;
     if (mm < 10) mm = '0' + mm;
+    if (h < 10) h = '0' + h;
 
     return  (dd + '/' + mm + '/' + yyyy + " " + h + ":" + mins);
   }

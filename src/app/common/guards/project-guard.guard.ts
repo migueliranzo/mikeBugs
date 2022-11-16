@@ -21,7 +21,7 @@ export class ProjectGuardGuard implements CanActivate {
         projectId = JSON.parse(route.params["project"] ).id
       }
 
-      return this.authService.LoggedBelongsToProject(projectId).pipe(first(), map(x=>{
+      return this.authService.loggedBelongsToProject(projectId).pipe(first(), map(x=>{
         if(x[0].length != 0){
           return true;
         }else{

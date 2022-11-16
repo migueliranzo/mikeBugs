@@ -5,18 +5,20 @@
             <mat-card-content>
               <h2>{{currentProject.title}}</h2>
               <p>{{currentProject.description}}</p>
-              <div class="border rounded-md p-4 overflow-hidden" [ngClass]="{'max-h-[10rem]': hideHistory}">
-                <span *ngFor="let item of currentProject?.history" class="flex justify-between" >
-                  <span>
-                    {{item.update}} 
+              <ng-container *ngIf="currentProject.history?.length">
+                <div class="border rounded-md p-4 overflow-hidden" [ngClass]="{'max-h-[10rem]': hideHistory}">
+                  <span *ngFor="let item of currentProject?.history" class="flex justify-between" >
+                    <span>
+                      {{item.update}} 
+                    </span>
+                    <span>
+                    {{ item.timeStamp? formatDate(item.timeStamp) : ""}}
+                    </span> 
                   </span>
-                  <span>
-                  {{ item.timeStamp? formatDate(item.timeStamp) : ""}}
-                  </span> 
-                </span>
-              </div>
-              <button mat-button style="margin-top: 6px;" (click)="hideHistory = !hideHistory">View more <mat-icon>{{hideHistory? "expand_less" : "expand_more"}}</mat-icon> </button>
-            </mat-card-content>
+                </div>
+                <button mat-button style="margin-top: 6px;" (click)="hideHistory = !hideHistory">View more <mat-icon>{{hideHistory? "expand_more" : "expand_less"}}</mat-icon> </button>
+              </ng-container>
+          </mat-card-content>
             <mat-card-actions>
               <div> 
               <button mat-button color="accent" (click)="goToProjectView()">Manage tickets</button>
@@ -93,8 +95,15 @@
       </mat-error>
     </mat-form-field>
   </p>
+
+  <div class="flex justify-evenly items-center" *ngIf="currentUser.email == 'demo@gmail.com'">
+    <button color="warn" matDialogClose (click)="inviteDemoUser()" mat-raised-button>Auto-invite a demo user (Demo mode only) </button>
+  </div>
+  
   <mat-dialog-actions align="end">
     <button mat-button matDialogClose>Close</button>
     <button mat-raised-button color="accent" [disabled]="!emailFormControl.valid" (click)="sendEmail.emit({email:emailFormControl.value, projectName:currentProject?.title, projectId: currentProject?.id})" matDialogClose>Send</button>
   </mat-dialog-actions>
+
+
 </ng-template>

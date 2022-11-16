@@ -23,14 +23,13 @@ export class ProjectManagmentComponent implements OnInit {
   constructor(private projectService:ProjectService, private store: AngularFirestore, public matDialog: MatDialog, public authService: AuthService, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
-
-    this.authService.currentProject = null;
-    this.authService.currentTicket = null;
     
     this.authService.currentUser$.pipe(first()).subscribe(x=> {
     this.currentUser = x;
     this.projects$ = this.projectService.getUserProjects(x!.uid).pipe(tap(x=>{
       
+      this.authService.currentProject = null;
+      this.authService.currentTicket = null;
       this.selectedProject = x[0];
     }));
   
