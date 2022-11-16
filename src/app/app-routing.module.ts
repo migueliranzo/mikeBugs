@@ -13,6 +13,7 @@ const routes: Routes = [
   {path: "my-tickets",component: ticketListComponent, canActivate: [AuthGuardGuard]},
   {path: "ticket-detail", component: TicketDetailComponent, canActivate: [AuthGuardGuard, ProjectGuardGuard]},
   {path: 'login', component: LoginComponent},
+  { path: '**', redirectTo: '/project-management', pathMatch: 'full' },
 ];
 
 @NgModule({

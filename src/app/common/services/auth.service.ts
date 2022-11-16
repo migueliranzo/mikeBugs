@@ -115,7 +115,7 @@ export class AuthService {
       })
   
       this.store.doc(`projects/8oJWaCAJ6eJix9Z7XRcv`).set({
-        description: "This project has a couple of fake data to toy around the web site without doing any damage",
+        description: "This project has some fake data to toy around the web site without doing any damage",
         subtitle:"A project to show the website capabilities as a project owner",
         title:"Owner demo project",
         id: "8oJWaCAJ6eJix9Z7XRcv"

@@ -5,6 +5,7 @@
     <span >
       <span class="mr-6"> MKBugs </span>
       <span class="font-light">
+        <a *ngIf="auth.currentProject?.title"  class="cursor-pointer hover:text-pink-600" routerLink="/project-management">Projects/</a>
       <a *ngIf="auth.currentProject?.title" class="cursor-pointer hover:text-pink-600" href="{{'ticket-list;filter=' + auth.currentProject?.id }}">
         <ng-container >{{auth.currentProject?.title }}</ng-container>
       </a>  
