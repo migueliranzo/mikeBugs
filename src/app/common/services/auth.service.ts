@@ -69,9 +69,7 @@ export class AuthService {
     
     return from(this.store.collection("invitations").doc(invite.id).delete().then(x=>{
       return  this.store.collection("user-project").add({email: invite.email, projectId: invite.projectId, role: 4, uid:  this.auth.currentUser?.uid }).then(x=>{
-        if(invite.email == "demo@gmail.com" && invite.projectId == "uZPq2ztYGzLcCkFtoBPM"){
-          x.update({role:0});
-        }else{
+        if(invite.email != "demo@gmail.com" && invite.projectId == "uZPq2ztYGzLcCkFtoBPM"){
           this.store.doc(`projects/${invite.projectId}`).collection("history").add({update: `${invite.email} joined the project`, timeStamp: serverTimestamp()})
         }
         return false;

@@ -196,7 +196,7 @@
 
     <div class="flex flex-col" *ngIf="loaded; else spinnerNewComment">
         <mat-form-field class="w-[100%]"  appearance="fill" color="accent">
-            <textarea  [(ngModel)]="comment" matInput class="w-[100%]" placeholder="Add a comment..."></textarea>
+            <textarea [disabled]="getLoggedRole() == 4"  [(ngModel)]="comment" matInput class="w-[100%]" placeholder="Add a comment..."></textarea>
         </mat-form-field>
         <div>
             <button (click)="saveComment()" [disabled]="!comment" style="margin-right: 20px; margin-bottom: 20px;" mat-raised-button  class="float-right" appareance="outline" >Comment</button>
