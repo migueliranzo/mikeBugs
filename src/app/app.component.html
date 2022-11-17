@@ -3,7 +3,7 @@
   <div class="flex w-[100%] justify-between">
     
     <span >
-      <span class="mr-6" *ngIf="sideBarMode == 'side'; else burgerMenu" > MKBugs </span>
+      <span class="mr-6" *ngIf="sideBarMode == 'side'; else burgerMenu" > MKbug tracker </span>
       <ng-template #burgerMenu>   <mat-icon (click)="sidenav.open()" class="mt-2">menu</mat-icon>   </ng-template>
       <span class="font-light md:contents hidden">
         <a *ngIf="auth.currentProject?.title"  class="cursor-pointer hover:text-pink-600" routerLink="/project-management">Projects/</a>
